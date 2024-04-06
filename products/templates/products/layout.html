@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <title>ListProducts</title>
+
+  <style>
+    .top-menu li a::after {
+        content: '';
+        display: block;
+        width: 100%;
+        background-color: #111;
+        height: 2px;
+        transition: all .3s;
+        transform: scale(0);
+    }
+    .top-menu li a:hover::after {
+        transform: scale(1);
+    }
+
+    .footer {
+        background-color: #343434;
+    }
+    .footer h4 {
+        color: #ccc;
+        text-transform: uppercase;
+        font-size: 16px;
+        border-bottom: 1px solid #666;
+        padding-bottom: 6px;
+        padding-top: 40px;
+    }
+    .footer a {
+        text-decoration: none;
+        padding-bottom: 14px;
+        transition: all .3s;
+    }
+    .footer a:hover {
+        color: #fff;
+        text-decoration: underline;
+    }
+    .footer a, footer li {
+        color: #c8c8c8;
+        font-size: 14px;
+        padding-bottom: 7px;
+        padding-top: 7px;
+    }
+  </style>
+
+</head>
+<body style="background-color: lightgrey">
+
+   <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid" style="font-size: larger">
+      <a class="navbar-brand" style="font-family: fantasy; font-size: x-large" href="{% url 'get-products' %}">ALL-INCLUSIVE</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active top-menu" aria-current="page" href="{% url 'get-products' %}">Home</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              CLOTH
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{% url 'get-clothing' %}">Cloth</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="uk-nav-divider dropdown-item" href="{% url 'get-pants' %}">Pants</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-jumpers' %}">Jumpers</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-jeans' %}">Jeans</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-jackets' %}">Jackets</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-coats' %}">Coats</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-shirts' %}">Shirts</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-tshirts' %}">T-shirts</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            SHOES
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'get-shoes' %}">Shoes</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'get-boots' %}">Boots</a></li>
+            <li><a class="dropdown-item" href="{% url 'get-sneakers' %}">Sneakers</a></li>
+            <li><a class="dropdown-item" href="{% url 'get-moccasins' %}">Moccasins</a></li>
+            <li><a class="dropdown-item" href="{% url 'get-list-shoes' %}">Shoes</a></li>
+          </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              ACCESSORIES
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{% url 'get-accessories' %}">Accessories</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{% url 'get-ties' %}">Ties</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-wallets' %}">Wallets</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-belts' %}">Belts</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-bags' %}">Bags</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-scavers' %}">Scavers</a></li>
+            </ul>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav ms-auto ms-2 mb-lg-0">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle"  style="font-family: fantasy; font-size: inherit" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Contacts  |  8-212-555-00-55
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">8-212-555-00-55</a></li>
+              <li><a class="dropdown-item" href="#">8-029-555-77-55</a></li>
+              <li><a class="dropdown-item" href="#">8-033-555-77-56</a></li>
+              <li><a class="dropdown-item" href="#">8-025-555-77-57</a></li>
+            </ul>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 top-menu">
+          <li class="nav-item ms-auto row">
+{#            {% if user.is_authenticated %}#}
+            {% if perms.products.add1 %}
+            <a class="nav-link active col" aria-current="page" href="{% url 'add-product' %}">Add</a>
+            {% endif %}
+            {% if not user.is_authenticated %}
+            <a class="nav-link active col" aria-current="page" href="{% url 'login' %}">Enter</a>
+            <a class="nav-link active col" aria-current="page" href="{% url 'register' %}">Registration</a>
+            {% else %}
+            <a class="nav-link active col" aria-current="page" href="{% url 'logout' %}">Exit</a>
+            {% endif %}
+            {% if user.is_authenticated %}
+            <a class="nav-link active col" aria-current="page" href="">{{ user.username }}</a>
+            {% endif %}
+          </li>
+        </ul>
+
+        <form class="d-flex gap-2" style="width: 250px" role="search" method="post" action="{% url 'search-product' %}">
+          {% csrf_token %}
+          <input name="search_string" class="form-control ms-4" type="search" placeholder="search" aria-label="Search">
+          <button class="btn btn-outline-secondary" type="submit">Search</button>
+        </form>
+
+{#      Корзина#}
+{#        <ul class="navbar-nav me-auto mb-2 mb-lg-0">#}
+{#          <li class="nav-item ms-auto row">#}
+{#            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modal-cart">Basket</a>#}
+{##}
+{#            <div class="modal fade" id="modal-cart" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">#}
+{#              <div class="modal-dialog modal-xl">#}
+{#                <div class="modal-content">#}
+{#                  <div class="modal-header bg-secondary text-white">#}
+{#                    <h5 class="modal-title" id="exampleModalLabel">Basket</h5>#}
+{#                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>#}
+{#                  </div>#}
+{#                  <div class="modal-body">#}
+{#                    <table class="table">#}
+{#                      <tbody>#}
+{#                        <tr>#}
+{#                          <td><img src="{{ product.image.url }}" alt="image" style="max-width: 100px"></td>#}
+{#                          <td><a href="#">{{ product.name_prod }}</a></td>#}
+{#                          <td>{{ product.article }}</td>#}
+{#                          <td>{{ product.price }}</td>#}
+{#                        </tr>#}
+{#                      </tbody>#}
+{#                    </table>#}
+{#                  </div>#}
+{#                  <div class="modal-footer">#}
+{#                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Сontinue shopping</button>#}
+{#                    <button type="button" class="btn btn-primary">Go to checkout</button>#}
+{#                  </div>#}
+{#                </div>#}
+{#              </div>#}
+{#            </div>#}
+{#          </li>#}
+{#        </ul>#}
+
+
+
+      </div>
+    </div>
+  </nav>
+
+
+  <img src="/media/mainpage/17-9.jpg" alt="homeimage" style="width:100%;height:250px;">
+
+
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+
+   <p>
+     <br>
+     <br>
+   </p>
+
+  <footer>
+    <section class="footer">
+      <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-6">
+              <h4>INFORMATION</h4>
+              <ul class="list-unstyled">
+                <li><a href="{% url 'get-products' %}">Home</a></li>
+                <li><a href="{% url 'about' %}">About online-shop</a></li>
+                <li><a href="{% url 'delivery_payment' %}">Delivery and payment</a></li>
+                <li>Connect with us:</li>
+                <li>info@allinclusive.com</li>
+              </ul>
+            </div>
+
+            <div class="col-md-3 col-6">
+              <h4>WORKING HOURS</h4>
+              <ul class="list-unstyled">
+                <li>Daily from 8.00 to 20.00</li>
+                <li>ONLINE ORDERS ARE ACCEPTED</li>
+                <li>ROUND THE CLOCK</li>
+              </ul>
+            </div>
+
+            <div class="col-md-3 col-6">
+              <h4>СONTACTS</h4>
+              <ul class="list-unstyled">
+                <li><a href="tel: 80212550055">8-212-555-00-55</a></li>
+                <li><a href="tel: 80295557755">8-029-555-77-55</a></li>
+                <li><a href="tel: 80335557755">8-033-555-77-56</a></li>
+                <li><a href="tel: 80255557755">8-025-555-77-57</a></li>
+              </ul>
+            </div>
+
+            <div class="col-md-3 col-6">
+              <h4>REVIEWS</h4>
+              <ul class="list-unstyled">
+                <li><a href="#">Reviews</a></li>
+                <li><a href="#">Suggestions for improvement</a></li>
+              </ul>
+            </div>
+        </div>
+      </div>
+    </section>
+  </footer>
+
+
+{#  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>#}
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+{% extends "products/layout.html" %}
+
+{% block content %}
+    <style>
+      .card {
+          box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+          transition: all .3s;
+      }
+      .card:hover {
+          box-shadow: 0 14px 30px -15px rgba(0, 0, 0, 1.5);
+      }
+    </style>
+
+{#    <h2 class="w-full text-center">Product list</h2>#}
+    <br>
+    <hr>
+
+    <div class="d-flex flex-row flex-wrap justify-content-between row-gap-3 px-4">
+        {% for product in products %}
+            <div class="card" style="width: 17rem; border-image: fill">
+                <img src="{{ product.image.url }}" class="card-img" alt="image" >
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="card-title">{{ product.name_prod }} - {{ product.article }}</h5>
+                        <h6 class="text-black-50">{{ product.price }} BYN</h6>
+                    </div>
+                    <p class="card-text">{{ product.description }}</p>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'product-details' product.id %}" class="btn btn-outline-secondary">Details</a>
+                        <a href="#" class="btn btn-outline-secondary">Add to basket</a>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <a href="{% url 'product-details' product.id %}">{{ product.name }}</a>
+            </div>
+        {% endfor %}
+    </div>
+    <hr>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  {# Кнопка скрывается, если пользователь не вошёл в систему #}
+  {#  {% if user.is_authenticated %}#}
+{#    {% if perms.products.add1 %}#}
+{#    <a class="btn btn-outline-success" href="{% url 'add-product' %}">Add product</a>#}
+{#    {% endif %}#}
+{#    <table class="table table-hover table-info table-striped-columns table-bordered border-black overflow-x-visible">#}
+{#      <thead class="fw-bold h4 text-center">#}
+{#      <tr>#}
+{#        <th>Name</th>#}
+{#        <th>Article</th>#}
+{#        <th class="d-none d-md-table-cell">Color</th>#}
+{#        <th class="d-none d-md-table-cell">Price</th>#}
+{#        <th class="d-none d-lg-table-cell">Quantity</th>#}
+{#        <th class="d-none d-lg-table-cell">Image</th>#}
+{#        <th></th>#}
+{#      </tr>#}
+{#      </thead>#}
+{#      <tbody class="align-middle text-center">#}
+{#      {% for product in products %}#}
+{#      <tr>#}
+{#        <td>{{ product.name_prod }}</td>#}
+{#        <td>{{ product.article }}</td>#}
+{#        <td class="d-none d-md-table-cell">{{ product.color }}</td>#}
+{#        <td class="d-none d-md-table-cell">{{ product.price }}</td>#}
+{#        <td class="d-none d-md-table-cell">{{ product.product_count }}</td>#}
+{#        <td>#}
+{#          <img src="{{ product.image.url }}" alt="image" height="50" width="100">#}
+{#        </td>#}
+{#        <td>#}
+{#          <a href="/product/get-product-by-id/{{ product.id }}/" class="btn btn-outline-primary">Details</a>#}
+{#        </td>#}
+{#      </tr>#}
+{#      {% endfor %}#}
+{#      </tbody>#}
+{#    </table>#}
+
+
+

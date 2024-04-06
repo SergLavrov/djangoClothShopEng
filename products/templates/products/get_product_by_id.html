@@ -1,0 +1,135 @@
+{% extends "products/layout.html" %}
+
+{% block content %}
+
+  <div class="row col-12 offset-lg-2 col-lg-8">
+    <h3 class="pt-5" style=" color: blueviolet">Detailed information about the product - article № {{ product.article }}</h3>
+    <form method="POST" class="row" action="{% url 'update-product' product_id=product.id %}">
+
+      {% csrf_token %}
+
+    <div class="col-12 col-lg-4 pb-3">
+          <label for="inputnameproduct" class="form-label fw-medium">Name product</label>
+          <input type="text" value="{{ product.name_prod }}" name="name_prod" class="form-control" id="inputnameproduct" placeholder="Enter the product name">
+    </div>
+
+      <div class="col-12 col-lg-4 pb-3">
+          <label for="inputarticle" class="form-label fw-medium">Article</label>
+          <input type="text" value="{{ product.article }}" name="article" class="form-control" id="inputarticle" placeholder="Enter article">
+       </div>
+
+      <div class="col-12 col-lg-4 pb-3">
+        <label for="inputproductcategory" class="form-label fw-medium">Category</label>
+        <select class="form-select" id="inputproductcategory" name="category_id">
+{#          <option value="одежда">ОДЕЖДА</option>#}
+{#          <option value="обувь">ОБУВЬ</option>#}
+{#          <option value="аксессуары">АКСЕССУАРЫ</option>#}
+          {% for category in categories %}
+          <option {% if category.id == product.category.id %} selected {% endif %} value="{{ category.id }}">{{ category.name_category }}</option>
+{#        Тег <option> определяет опцию - "Выберите из ВЫПАДАЮЩЕГО списка". <option> помещаются внутрь <select> #}
+        {#Тег можно использовать без каких-либо атрибутов, но Обычно требуется атрибут value, который указывает, #}
+        {#что отправляется на сервер при отправке формы.#}
+          {% endfor %}
+        </select>
+      </div>
+
+{#      P.S.:#}
+{#      1. <select class="form-select" id="inputproductcategory" name="category_id"> берем из views.py#}
+{#      из блока - # Получаем "НОВЫЕ" ДАННЫЕ: category_id = request.POST.get('category_id')#}
+{#      2. {% for category in categories %}#}
+{#         "category" из models.py - class Product;#}
+{#         "categories" берем из views.py из метода: def get_product_by_id#}
+{#          data = {#}
+{#              'product': product,#}
+{#              'categories': category_list}#}
+{##}
+{#      3. <option {% if category.id == product.category.id %}#}
+{#          "category" из models.py - class Product;#}
+{#      3.1 value="{{ category.id }}">{{ category.name_category }}#}
+{#          "category.name_category" --> "category" берем из class Product(models.Model):#}
+{#                                    --> имя: name_category = models.CharField(max_length=50)#}
+
+
+      <div class="col-12 col-lg-4 pb-3">
+        <label for="inputseason" class="form-label fw-medium">Season</label>
+        <select class="form-select" id="inputseason" name="season_id">
+          {% for season in seasons %}
+          <option {% if season.id == product.season.id %} selected {% endif %} value="{{ season.id }}">{{ season.name_season }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-4 pb-3">
+        <label for="inputcomposition" class="form-label fw-medium">Product composition</label>
+        <select class="form-select" id="inputcomposition" name="product_composition_id">
+          {% for product_composition in compositions %}
+          <option {% if product_composition.id == product.product_composition.id %} selected {% endif %} value="{{ product_composition.id }}">{{ product_composition.product_composition }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-4 pb-3">
+        <label for="inputcompany" class="form-label fw-medium">Company</label>
+        <select class="form-select" id="inputcompany" name="company_id">
+          {% for company in companies %}
+          <option {% if company.id == product.company.id %} selected {% endif %} value="{{ company.id }}">{{ company.name_company }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-4 pb-3">
+          <label for="inputcolor" class="form-label fw-medium">Color</label>
+          <input type="text" value="{{ product.color }}" name="color" class="form-control" id="inputcolor" placeholder="введите цвет изделия">
+      </div>
+
+      <div class="col-12 col-lg-4 pb-3">
+          <label for="inputprice" class="form-label fw-medium">Price</label>
+          <input type="number" value="{{ product.price }}" name="price" class="form-control" id="inputprice" placeholder="введите цену товара">
+      </div>
+
+      <div class="col-12 col-lg-4 pb-3">
+          <label for="inputproductcount" class="form-label fw-medium">Quantity</label>
+          <input type="number" value="{{ product.product_count }}" name="product_count" class="form-control" id="inputproductcount" placeholder="введите количество товара">
+      </div>
+
+{#      <div class="col-12 col-lg-4 pb-3">#}
+{#        {% if product.category.id == 1 %}#}
+{#        <label for="inputsizecloth" class="form-label fw-medium nav-link active col">Размер одежды</label>#}
+{#        <select class="form-select" id="inputsizecloth" name="size_cloth_id">#}
+{#          {% for size_cloth in size_clothes %}#}
+{#          <option {% if size_cloth.id == product.size_cloth.id %} selected {% endif %} value="{{ size_cloth.id }}">{{ size_cloth.size_cloth }}</option>#}
+{#          {% endfor %}#}
+{#        </select>#}
+{#        {% endif %}#}
+{#      </div>#}
+
+      <div class="col-12 col-lg-4 pb-3">
+        <label for="inputsizescale" class="form-label fw-medium nav-link active col">Size scale</label>
+        <select class="form-select" id="inputsizescale" name="size_scale_id">
+          {% for size_scale in size_scales %}
+          <option {% if size_scale.id == product.size_scale.id %} selected {% endif %} value="{{ size_scale.id }}">{{ size_scale.size_scale }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-12 pb-3">
+        <label for="inputdescription" class="form-label fw-medium">Description</label>
+        <input type="text" value="{{ product.description }}" name="description" class="form-control" id="inputdescription" placeholder="введите краткое описание товара">
+      </div>
+
+      <div class="col-12 pb-3">
+        <label for="image" class="form-label fw-medium">Image</label>
+        <input type="file" value="{{ product.image }}" name="image" class="form-control" id="image" placeholder="Upload photo">
+      </div>
+
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary">Сhange</button>
+        {#               При нажатии на SUBMIT измененные данные отправляются на СЕРВЕР командой:#}
+{#                        см выше:<form method="POST" action="{% url 'update-product' product_id=product.id %}">#}
+
+        <a class="btn btn-danger" href="{% url 'delete-product' product_id=product.id %}">Delete</a>
+      </div>
+  </form>
+  </div>
+
+{% endblock %}

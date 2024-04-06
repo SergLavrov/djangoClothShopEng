@@ -1,0 +1,39 @@
+{% extends "products/layout.html" %}
+
+{% block content %}
+
+{#    <div class="d-flex w-full gap-3">#}
+{#        <img src="https://www.artmajeur.com/medias/hd/w/a/wasantha-ranjan/artwork/12272561_2_staged-1.jpg" class="img-thumbnail" width="400" alt="image" />#}
+{#        <div>#}
+{#            <h2>Тип комнаты - {{ room.room_type.name }}</h2>#}
+{#            <h2>Номер комнаты - {{ room.number }}</h2>#}
+{#            <h3>Цена - {{ room.price }} BYN</h3>#}
+{#            <br />#}
+{#            <p>{{ room.room_type.description }}</p>#}
+{#            <br />#}
+{#            <a href="#" class="btn btn-success">Бронь</a>#}
+{#        </div>#}
+{#    </div>#}
+
+    <br>
+    <hr>
+    <div class="d-flex w-full gap-3">
+
+        <img src="{{ product.image.url }}" alt="image" height="550" width="450">
+
+        <div>
+          <h3 class="pt-3" style="color: dimgrey">{{ product.name_prod }} - article № {{ product.article }}</h3>
+          <h4 style="font-family: cursive; color: dimgrey">Brand - {{ product.company.name_company }}</h4>
+          <h4 style="font-family: cursive; color: dimgrey">Season - {{ product.season.name_season }}</h4>
+          <h4 style="font-family: cursive; color: dimgrey">Product composition - {{ product.product_composition.product_composition }}</h4>
+          <h4 style="font-family: cursive; color: dimgrey">Color - {{ product.color }}</h4>
+          <h4 style="font-family: cursive; color: dimgrey">Name product - {{ product.season.name_season }}</h4>
+          <h4 style="font-family: cursive; color: dimgrey">Quantity in stock - {{ product.product_count }} (items)</h4>
+          <br>
+          <a href="#" class="btn btn-secondary">Add to basket</a>
+          <a href="#" class="btn btn-secondary">To favorites</a>
+        </div>
+
+    </div>
+    <hr>
+{% endblock %}
