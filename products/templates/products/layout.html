@@ -112,13 +112,16 @@
               Contacts  |  8-212-555-00-55
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">8-212-555-00-55</a></li>
-              <li><a class="dropdown-item" href="#">8-029-555-77-55</a></li>
-              <li><a class="dropdown-item" href="#">8-033-555-77-56</a></li>
-              <li><a class="dropdown-item" href="#">8-025-555-77-57</a></li>
+              <li><a class="dropdown-item">8-212-555-00-55</a></li>
+              <li><a class="dropdown-item">8-029-555-77-55</a></li>
+              <li><a class="dropdown-item">8-033-555-77-56</a></li>
+              <li><a class="dropdown-item">8-025-555-77-57</a></li>
             </ul>
           </li>
         </ul>
+
+
+<!-- Вариант 1 - БЕЗ "Модального окна" - через Шаблон.html -->
 
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 top-menu">
           <li class="nav-item ms-auto row">
@@ -127,8 +130,9 @@
             <a class="nav-link active col" aria-current="page" href="{% url 'add-product' %}">Add</a>
             {% endif %}
             {% if not user.is_authenticated %}
+
             <a class="nav-link active col" aria-current="page" href="{% url 'login' %}">Enter</a>
-            <a class="nav-link active col" aria-current="page" href="{% url 'register' %}">Registration</a>
+            <a class="nav-link active col" aria-current="page" href="{% url 'register' %}">Register</a>
             {% else %}
             <a class="nav-link active col" aria-current="page" href="{% url 'logout' %}">Exit</a>
             {% endif %}
@@ -138,13 +142,42 @@
           </li>
         </ul>
 
-        <form class="d-flex gap-2" style="width: 250px" role="search" method="post" action="{% url 'search-product' %}">
+<!-- Вариант 2 - через MODAL window -->
+{#        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 top-menu">#}
+{#          <li class="nav-item ms-auto row">#}
+{#            {% if user.is_authenticated %}#}
+{#            {% if perms.products.add1 %}#}
+{#              <a class="nav-link active col" aria-current="page" href="{% url 'add-product' %}">Add</a>#}
+{#            {% endif %}#}
+{##}
+{#            {% if not user.is_authenticated %}#}
+{#              <ul class="navbar-nav">#}
+{#                <li class="nav-item active mr-2">#}
+{#                  <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Enter</a>#}
+{#                </li>#}
+{#                <li class="nav-item">#}
+{#                  <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#regModal">#}
+{#                    Register#}
+{#                  </a>#}
+{#                </li>#}
+{#              </ul>#}
+{#            {% else %}#}
+{#              <a class="nav-link active col" aria-current="page" href="{% url 'logout' %}">Exit</a>#}
+{#            {% endif %}#}
+{#            {% if user.is_authenticated %}#}
+{#              <a class="nav-link active col" aria-current="page" href="">{{ user.username }}</a>#}
+{#            {% endif %}#}
+{#          </li>#}
+{#        </ul>#}
+
+<!-- Button Search -->
+        <form class="d-flex gap-2" style="width: 240px" role="search" method="post" action="{% url 'search-product' %}">
           {% csrf_token %}
           <input name="search_string" class="form-control ms-4" type="search" placeholder="search" aria-label="Search">
           <button class="btn btn-outline-secondary" type="submit">Search</button>
         </form>
 
-{#      Корзина#}
+<!-- Basket -->
 {#        <ul class="navbar-nav me-auto mb-2 mb-lg-0">#}
 {#          <li class="nav-item ms-auto row">#}
 {#            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modal-cart">Basket</a>#}
@@ -177,8 +210,6 @@
 {#            </div>#}
 {#          </li>#}
 {#        </ul>#}
-
-
 
       </div>
     </div>
@@ -224,10 +255,10 @@
             <div class="col-md-3 col-6">
               <h4>СONTACTS</h4>
               <ul class="list-unstyled">
-                <li><a href="tel: 80212550055">8-212-555-00-55</a></li>
-                <li><a href="tel: 80295557755">8-029-555-77-55</a></li>
-                <li><a href="tel: 80335557755">8-033-555-77-56</a></li>
-                <li><a href="tel: 80255557755">8-025-555-77-57</a></li>
+                <li><a>8-212-555-00-55</a></li>
+                <li><a>8-029-555-77-55</a></li>
+                <li><a>8-033-555-77-56</a></li>
+                <li><a>8-025-555-77-57</a></li>
               </ul>
             </div>
 
@@ -242,6 +273,72 @@
       </div>
     </section>
   </footer>
+
+
+<!-- Modal window for ENTER -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-secondary text-white">
+          <h4 class="modal-title" id="exampleModalLabel">Login</h4>
+        </div>
+        <form method="post" action="{% url 'login' %}">
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="username">User name:</label>
+              <input type="text" class="form-control" id="username" name="username">
+            </div>
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input type="password" step="1" class="form-control" id="password" name="password">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Enter</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Modal window for REGISTRATION -->
+   <div class="modal fade" id="regModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     <div class="modal-dialog">
+       <div class="modal-content">
+         <div class="modal-header bg-secondary text-white">
+           <h4 class="modal-title" id="exampleModalLabel">Registration</h4>
+         </div>
+         <form method="post" action="{% url 'register' %}">
+           {% csrf_token %}
+           <div class="modal-body">
+             <div class="form-group">
+               <label for="username">User name:</label>
+               <input type="text" class="form-control" id="username" name="username">
+             </div>
+             <div class="form-group">
+               <label for="password">Password:</label>
+               <input type="password" class="form-control" id="password" name="password">
+             </div>
+             <div class="form-group">
+               <label for="confirm_password">Confirm the password</label>
+               <input type="password" class="form-control" id="confirm_password" name="confirm_password">
+             </div>
+             <div class="form-group">
+               <label for="email">Email</label>
+               <input type="text" class="form-control" id="email" name="email">
+             </div>
+           </div>
+           <div class="modal-footer">
+             <button type="submit" class="btn btn-primary">Register</button>
+             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+           </div>
+         </form>
+       </div>
+     </div>
+   </div>
 
 
 {#  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>#}

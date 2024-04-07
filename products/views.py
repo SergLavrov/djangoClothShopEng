@@ -1,4 +1,5 @@
 from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
+from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.shortcuts import render
 from .models import Product, Company, Category, Season, ProductComposition, SizeScale
@@ -97,6 +98,7 @@ def product_datails(request, product_id):
     return render(request, 'products/product_details.html', {"product": product})
 
 
+
 def get_product_by_id(request, product_id):
     product = Product.objects.get(id=product_id)
     category_list = Category.objects.all()
@@ -115,6 +117,129 @@ def get_product_by_id(request, product_id):
     }
 
     return render(request, 'products/get_product_by_id.html', data)
+
+
+
+# @login_required  # декоратор, требующий аутентификации пользователя
+@permission_required('products.add1')  # декоратор, требующий наличия определенных разрешений
+def add_product(request):
+    """
+    Представление для добавления нового автомобиля в автопарк.
+    Обрабатывает как GET, так и POST запросы.
+    Для GET запросов извлекает список марок и типов автомобилей и рендерит шаблон 'add_product.html' с данными.
+    Для POST запросов извлекает детали автомобиля из запроса и сохраняет новый автомобиль
+    в базу данных, затем перенаправляется на URL 'get-products'.
+    """
+    if request.method == 'GET':
+        category_list = Category.objects.all()  # Если запрос GET, то:
+        season_list = Season.objects.all()  # функция извлекает все данные товара с ForeignKey из БД
+        composition_list = ProductComposition.objects.all()
+        size_scale_list = SizeScale.objects.all()
+        company_list = Company.objects.all()
+
+        data = {  # таким образом передали в шаблон 5 словарей:
+            'categories': category_list,  # ДЛЯ УДОБСТВА заполнения этих полей в шаблоне - делаем их в виде
+            'seasons': season_list,  # выпадающего списка - см. models.py !!!
+            'compositions': composition_list,
+            'size_scales': size_scale_list,
+            'companies': company_list,
+        }
+        return render(request, 'products/add_product.html', data)
+
+        # функция render() возвращает шаблон 'add_product.html', где мы заполняем ВСЕ данные для НОВОГО товара
+        # см.models.py !!!
+
+
+    # Если метод запроса равен 'POST', то функция извлекает данные из запроса POST из заполненных полей шаблона
+    if request.method == 'POST':
+        name_prod = request.POST.get('name_prod')
+        article = request.POST.get('article')
+        description = request.POST.get('description')
+        color = request.POST.get('color')
+        price = request.POST.get('price')
+        product_count = request.POST.get('product_count')
+        category_id = request.POST.get('category_id')
+        season_id = request.POST.get('season_id')
+        product_composition_id = request.POST.get('product_composition_id')
+        size_scale_id = request.POST.get('size_scale_id')
+        company_id = request.POST.get('company_id')
+        image = request.FILES.get('image')
+
+        try:
+            if (not name_prod or not article or not description or not color or not price or not product_count
+               or not category_id or not season_id or not product_composition_id or not size_scale_id
+               or not company_id or not image):
+
+                raise ValidationError('All fields are required')
+
+            name_prod = str(name_prod)
+            if (not isinstance(name_prod, str)):
+                raise ValidationError('Field cannot be a number')
+
+            color = str(color)
+            if (not isinstance(color, str)):
+                raise ValidationError('Field cannot be a number')
+
+            price = float(price)
+            if price <= 0:
+                raise ValidationError('Price must be greater than 0')
+
+            if (not isinstance(price, float)):
+                raise ValidationError('Field must be numeric')
+
+            product_count = int(product_count)
+            if (product_count <= 0):
+                raise ValidationError('Count must be greater than 0')
+
+            if (not isinstance(product_count, int)):
+                raise ValidationError('Field must be numeric')
+
+
+            category = Category.objects.get(id=category_id)             # Находим КАТЕГОРИЮ по соотв-щему идентификатору
+            season = Season.objects.get(id=season_id)                   # Находим CЕЗОН по соотв-щему ID
+            product_composition = ProductComposition.objects.get(id=product_composition_id)  # СОСТАВ
+            size_scale = SizeScale.objects.get(id=size_scale_id)                             # РАЗМЕР
+            company = Company.objects.get(id=company_id)                                     # Производителя
+
+
+            product = Product(                            # Создаем НОВЫЙ объект Product и сохраняем его в БД
+                name_prod=name_prod,
+                article=article,
+                description=description,
+                color=color,
+                price=price,
+                product_count=product_count,
+                category=category,
+                season=season,
+                product_composition=product_composition,
+                size_scale=size_scale,
+                company=company,
+                image=image,
+            )
+            product.save()
+
+            return HttpResponseRedirect(reverse('get-products'))
+
+        except ValidationError as e:
+            error = str(e)
+
+            category_list = Category.objects.all()              #Т.е. если ошибка, то должны вернуться к шаблону из GET:
+            season_list = Season.objects.all()                  # см. начало метода !!!
+            composition_list = ProductComposition.objects.all()
+            size_scale_list = SizeScale.objects.all()
+            company_list = Company.objects.all()
+
+            data = {
+                'categories': category_list,
+                'seasons': season_list,
+                'compositions': composition_list,
+                'size_scales': size_scale_list,
+                'companies': company_list,
+                'error': error,
+            }
+            return render(request, 'products/add_product.html', data)
+
+
 
 
 
@@ -185,76 +310,6 @@ def delete_product(request: HttpRequest, product_id: int):
     return HttpResponseRedirect(reverse('get-products'))
 
 
-# @login_required  # декоратор, требующий аутентификации пользователя
-@permission_required('products.add1')  # декоратор, требующий наличия определенных разрешений
-def add_product(request):
-    """
-    Представление для добавления нового автомобиля в автопарк.
-    Обрабатывает как GET, так и POST запросы.
-    Для GET запросов извлекает список марок и типов автомобилей и рендерит шаблон 'add_product.html' с данными.
-    Для POST запросов извлекает детали автомобиля из запроса и сохраняет новый автомобиль
-    в базу данных, затем перенаправляется на URL 'get-products'.
-    """
-    if request.method == 'GET':
-        category_list = Category.objects.all()               # Если запрос GET, то:
-        season_list = Season.objects.all()                   # функция извлекает все данные товара с ForeignKey из БД
-        composition_list = ProductComposition.objects.all()
-        size_scale_list = SizeScale.objects.all()
-        company_list = Company.objects.all()
-
-        data = {                                # таким образом передали в шаблон 6 словарей:
-            'categories': category_list,        # ДЛЯ УДОБСТВА заполнения этих полей в шаблоне - делаем их в виде
-            'seasons': season_list,             # выпадающего списка - см. models.py !!!
-            'compositions': composition_list,
-            'size_scales': size_scale_list,
-            'companies': company_list,
-        }
-        return render(request, 'products/add_product.html', data)
-
-    # функция render() возвращает шаблон 'add_product.html', где мы заполняем ВСЕ данные для НОВОГО товара
-    # см.models.py !!!
-
-    # Если метод запроса равен 'POST', то функция извлекает данные из запроса POST из заполненных полей шаблона
-    if request.method == 'POST':
-        name_prod = request.POST.get('name_prod')
-        article = request.POST.get('article')
-        description = request.POST.get('description')
-        color = request.POST.get('color')
-        price = request.POST.get('price')
-        product_count = request.POST.get('product_count')
-        category_id = request.POST.get('category_id')
-        season_id = request.POST.get('season_id')
-        product_composition_id = request.POST.get('product_composition_id')
-        size_scale_id = request.POST.get('size_scale_id')
-        company_id = request.POST.get('company_id')
-        image = request.FILES.get('image')
-
-
-        category = Category.objects.get(id=category_id)             # Находим КАТЕГОРИЮ по соотв-щим идентификатору
-        season = Season.objects.get(id=season_id)                   # Находим CЕЗОН по соотв-щим идентификатору
-        product_composition = ProductComposition.objects.get(id=product_composition_id)  # СОСТАВ
-        size_scale = SizeScale.objects.get(id=size_scale_id)        # РАЗМЕР
-        company = Company.objects.get(id=company_id)                # Производителя
-                                                                    # т.е. получаем эти объекты по ID
-
-
-        product = Product(                            # Создаем НОВЫЙ объект Product и передаем ему данные автомобиля
-            name_prod=name_prod,
-            article=article,
-            description=description,
-            color=color,
-            price=price,
-            product_count=product_count,
-            category=category,
-            season=season,
-            product_composition=product_composition,
-            size_scale=size_scale,
-            company=company,
-            image=image,
-        )
-        product.save()
-
-        return HttpResponseRedirect(reverse('get-products'))
 
 
 def search_product(request):

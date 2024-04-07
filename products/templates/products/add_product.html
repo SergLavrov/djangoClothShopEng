@@ -3,7 +3,15 @@
 {% block content %}
 
   <div class="row col-12 offset-lg-2 col-lg-8">
+
     <h4 class="pt-5" style="text-align: center">Add product:</h4>
+
+    {% if error %}
+      <div class="alert alert-danger" role="alert">
+        {{ error }}
+      </div>
+    {% endif %}
+
     <form method="POST" class="row" enctype="multipart/form-data" action="{% url 'add-product' %}">
 
       {% csrf_token %}
@@ -111,7 +119,7 @@
 
 
       <div class="col-12">
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-secondary">Save</button>
 {#                                      При нажатии на SUBMIT данные отправляются на СЕРВЕР командой:#}
 {#                                      см выше:<form method="POST" class="row" action="{% url 'add-product' %}">#}
 

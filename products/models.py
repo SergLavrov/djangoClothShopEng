@@ -36,7 +36,7 @@ class Product(models.Model):
     company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
     image = models.ImageField('/product_image/')
     # file = models.FileField('car_file/')  # можно прикрепить ещё файл (например doc, txt и т.д.)
-    # image = models.ImageField(upload_to='products_images', blank=True)          # (ФОТО товара)
+    # image = models.ImageField(upload_to='/products_images', blank=True)          # (ФОТО товара)
 
 
     # class Meta:
