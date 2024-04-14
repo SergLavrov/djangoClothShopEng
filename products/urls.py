@@ -5,9 +5,10 @@ from django.views.generic import RedirectView
 urlpatterns = [
     path('', RedirectView.as_view(url='get-products/', permanent=True)),
     path('get-products/', views.get_products, name='get-products'),
-    path('product-details/<int:product_id>/', views.product_datails, name='product-details'),
+    path('get-products-list/', views.get_products_list, name='get-products-list'),
+    path('<int:product_id>/product-details/', views.product_details, name='product-details'),
     path('get-product-by-id/<int:product_id>/', views.get_product_by_id, name='get-product-by-id'),
-    path('update-product/<int:product_id>/', views.update_product, name='update-product'),
+    path('<int:product_id>/update-product/', views.update_product, name='update-product'),
     path('delete-product/<int:product_id>/', views.delete_product, name='delete-product'),
     path('add-product/', views.add_product, name='add-product'),
     path('search-product/', views.search_product, name='search-product'),

@@ -35,6 +35,7 @@ class Product(models.Model):
     size_scale = models.ForeignKey(SizeScale, on_delete=models.SET_NULL, null=True, default=0)
     company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
     image = models.ImageField('/product_image/')
+    is_deleted = models.BooleanField(default=False)
     # file = models.FileField('car_file/')  # можно прикрепить ещё файл (например doc, txt и т.д.)
     # image = models.ImageField(upload_to='/products_images', blank=True)          # (ФОТО товара)
 

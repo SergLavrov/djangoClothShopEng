@@ -2,11 +2,10 @@
 
 {% block content %}
 
-    <br>
     <hr>
-    <div class="d-flex w-full gap-3">
+    <div class="d-flex w-full gap-3" style="margin-left: 150px">
 
-        <img src="{{ product.image.url }}" alt="image" height="550" width="450">
+        <img src="{{ product.image.url }}" alt="image" height="500" width="400">
 
         <div>
           <h3 class="pt-3" style="color: black">{{ product.name_prod }} - article № {{ product.article }}</h3>
@@ -14,8 +13,24 @@
           <h4 style="font-family: cursive; color: dimgrey">Season - {{ product.season.name_season }}</h4>
           <h4 style="font-family: cursive; color: dimgrey">Product composition - {{ product.product_composition.product_composition }}</h4>
           <h4 style="font-family: cursive; color: dimgrey">Color - {{ product.color }}</h4>
-          <h4 style="font-family: cursive; color: dimgrey">Name product - {{ product.season.name_season }}</h4>
+{#          <h4 style="font-family: cursive; color: dimgrey">Size scale - {{ product.size_scale.size_scale }}</h4>#}
           <h4 style="font-family: cursive; color: dimgrey">Quantity in stock - {{ product.product_count }} (items)</h4>
+
+          <div class="col-12 col-lg-6 pb-3" style="font-family: cursive; font-size: 25px; color: dimgrey">
+            <label for="sizescale" class="form-label fw-medium nav-link active col">Size scale:</label>
+            <select class="form-select" id="sizescale" name="size_scale_id" style="width: 80px; background-color: lightgrey; border: outset">
+
+              {% for size_scale in size_scales %}
+
+                {% if size_scale.id == product.size_scale.id %}
+                  <option value="{{ size_scale.id }}" selected>{{ size_scale.size_scale }}</option>
+                {% else %}
+                  <option value="{{ size_scale.id }}">{{ size_scale.size_scale }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+
           <br>
           <a href="#" class="btn btn-secondary">Add to basket</a>
           <a href="#" class="btn btn-secondary">To favorites</a>

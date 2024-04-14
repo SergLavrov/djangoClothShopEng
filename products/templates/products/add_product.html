@@ -109,7 +109,8 @@
 
       <div class="col-12 pb-3">
         <label for="inputdescription" class="form-label fw-medium">Description</label>
-        <input type="text" name="description" class="form-control" id="inputdescription" placeholder="Enter a short description of the product">
+        <input type="text" name="description" class="form-control" id="inputdescription"
+               placeholder="Enter a short description of the product">
       </div>
 
       <div class="col-12 pb-3">
@@ -117,11 +118,11 @@
         <input type="file" name="image" id="image">
       </div>
 
-
       <div class="col-12">
         <button type="submit" class="btn btn-secondary">Save</button>
 {#                                      При нажатии на SUBMIT данные отправляются на СЕРВЕР командой:#}
 {#                                      см выше:<form method="POST" class="row" action="{% url 'add-product' %}">#}
+        <a href="{% url 'get-products-list' %}" class="btn btn-outline-secondary">Back</a>
 
       </div>
   </form>
