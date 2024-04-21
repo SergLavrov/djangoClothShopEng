@@ -32,10 +32,18 @@
           </div>
 
           <br>
-          <a href="#" class="btn btn-secondary">Add to basket</a>
-          <a href="#" class="btn btn-secondary">To favorites</a>
+
+          {% if user.is_authenticated %}
+          <a href="{% url 'add-to-basket' product.id %}" class="btn btn-outline-secondary">Add to basket</a>
+{#          <a href="#" class="btn btn-outline-secondary">Checkout</a>#}
+          {% endif %}
         </div>
 
     </div>
     <hr>
 {% endblock %}
+
+
+{% if perms.products.add1 %}
+    <a class="btn btn-outline-secondary" href="{% url 'add-product' %}">Add product</a>
+    {% endif %}

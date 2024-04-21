@@ -502,17 +502,20 @@ def search_product(request):
         return render(request, 'products/all_products.html')
     else:
         search_string = request.POST.get('search_string')
-        product_list = Product.objects.filter(
-            Q(name_prod__icontains=search_string)
-            | Q(article__icontains=search_string)
-            | Q(color__icontains=search_string)
-            # | Q(price__icontains=search_string)
-            | Q(category__name_category__icontains=search_string)
-            | Q(season__name_season__icontains=search_string)
-            | Q(product_composition__product_composition__icontains=search_string)
-            # | Q(size_scale__size_scale__icontains=search_string)
-            | Q(company__name_company__icontains=search_string)
-        )
+        try:
+            product_list = Product.objects.filter(
+                Q(name_prod__icontains=search_string)
+                | Q(article__icontains=search_string)
+                | Q(color__icontains=search_string)
+                # | Q(price__icontains=search_string)
+                | Q(category__name_category__icontains=search_string)
+                | Q(season__name_season__icontains=search_string)
+                | Q(product_composition__product_composition__icontains=search_string)
+                # | Q(size_scale__size_scale__icontains=search_string)
+                | Q(company__name_company__icontains=search_string)
+            )
+        except ValidationError:
+            product_list = Product.objects.all()
 
         return render(request, 'products/all_products.html', {'products': product_list})
 

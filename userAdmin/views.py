@@ -4,6 +4,8 @@ from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.shortcuts import render
+from django.contrib import messages
+from basket.models import Basket
 
 from .models import Profile
 
@@ -39,6 +41,8 @@ def register_user(request: HttpRequest) -> HttpResponse:
             user.groups.add(group_user)
             user.save()
 
+            messages.success(request, 'Registration completed successfully! You can login to the site!')
+
             return HttpResponseRedirect(reverse('login'))
 
         except ValidationError as e:
@@ -47,6 +51,35 @@ def register_user(request: HttpRequest) -> HttpResponse:
 
     else:
         return render(request, 'userAdmin/register.html')
+
+
+# def profile_user(request: HttpRequest):
+#     if request.method == 'POST':
+#         first_name = request.POST['first_name']
+#         last_name = request.POST['last_name']
+#         phone = request.POST['phone']
+#         about = request.POST['about']
+#
+#         profile = Profile(user=request.user, about=about, first_name=first_name, last_name=last_name, phone=phone)
+#         profile.save()
+#
+#         return HttpResponseRedirect(reverse('get-products'))
+#
+#     else:
+#         data = {
+#             'first_name': request.user.first_name,
+#             'last_name': request.user.last_name,
+#             'phone': request.user.profile.phone,
+#             'about': request.user.profile.about,
+#             'username': request.user.username,
+#             'email': request.user.email,
+#             'baskets': Basket.objects.filter(user=request.user)
+#         }
+#         return render(request, 'userAdmin/profile.html', data)
+
+
+
+
 
 
 # def register_user(request: HttpRequest):

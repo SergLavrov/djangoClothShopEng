@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <title>ListProducts</title>
+<!-- Ссылка для иконки -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <style>
     .top-menu li a::after {
@@ -123,8 +125,51 @@
           </li>
         </ul>
 
+      <!-- Icon of basket in Navbar -->
+        <div>
+          {% if user.is_authenticated %}
+          <a href="{% url 'in-basket' %}">
+            <i class="fa fa-shopping-cart position-relative" aria-hidden="true" style="font-size: 30px; margin-left: 25px; color: black"></i>
+          </a>
+          {% endif %}
+        </div>
 
-{#      При ВХОДЕ "Компании" попасть на список товаров в ВИДЕ ТАБЛИЦЫ !!!#}
+      <!--2 Вар "Icon of basket in Navbar - пробовал вывести над иконкой "количество товара ! -->
+{#        <div>#}
+{#          {% if user.is_authenticated %}#}
+{#          <a href="{% url 'in-basket' %}">#}
+{#            <i class="fa fa-shopping-cart position-relative" aria-hidden="true" style="font-size: 30px; margin-left: 25px; color: black">#}
+{#              <span class="position-absolute start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 10px">#}
+{#                {{ basket_item.quantity }}#} !!!
+{#                <span class="visually-hidden">unread messages</span>#}
+{#              </span>#}
+{#            </i>#}
+{#          </a>#}
+{#          {% endif %}#}
+{#        </div>#}
+
+      <!-- Total price in Navbar -->
+        <div>
+          {% if user.is_authenticated %}
+            <button type="button" class="btn btn-outline-secondary" style="margin-left: 20px">
+              <strong>Total price: {{ total_price }} BYN</strong>
+            </button>
+          {% endif %}
+        </div>
+
+
+{#        <button type="button" class="btn btn-outline-secondary position-relative">#}
+{#          <strong>Total price: {{ total_price }} BYN</strong>#}
+{#          <span class="position-absolute start-100 translate-middle badge rounded-pill bg-danger">#}
+{#            {{ item.quantity }}#}
+{#            <span class="visually-hidden">unread messages</span>#}
+{#          </span>#}
+{#        </button>#}
+
+
+
+
+<!-- При ВХОДЕ от "Компании" попадаем на список товаров в ВИДЕ ТАБЛИЦЫ !!! -->
 
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 top-menu">
           <li class="nav-item ms-auto row">
@@ -207,6 +252,8 @@
           <button class="btn btn-outline-secondary" type="submit">Search</button>
         </form>
 
+
+
 <!-- Basket -->
 {#        <ul class="navbar-nav me-auto mb-2 mb-lg-0">#}
 {#          <li class="nav-item ms-auto row">#}
@@ -275,9 +322,20 @@
   </div>
 
 
-  <div class="container">
-    {% block content %}{% endblock %}
-  </div>
+   <div class="container">
+   <!-- Message about: Registration completed successfully! You can login to the site!-->
+     {% if messages %}
+       <ul class="messages text-center" style="padding-top: 55px; color: darkslateblue; font-size: 20px">
+         {% for message in messages %}
+           <li class="{{ message.tags }}" style="list-style-type: none">
+             {{ message|safe }}
+{#             <a href="#" class="close">✖</a>#}
+           </li>
+         {% endfor %}
+       </ul>
+     {% endif %}
+     {% block content %}{% endblock %}
+   </div>
 
 
   <footer style="padding-top: 20px">
