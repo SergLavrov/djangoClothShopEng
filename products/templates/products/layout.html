@@ -51,13 +51,13 @@
         height: 30px;
     }
   </style>
-
 </head>
+
 <body style="background-color: lightgrey">
 
    <nav class="navbar navbar-expand-lg navbar-light" style="box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 1.5)">
     <div class="container-fluid" style="font-size: larger">
-      <a class="navbar-brand" style="font-family: fantasy; font-size: x-large" href="{% url 'get-products' %}">ALL-INCLUSIVE</a>
+      <a class="navbar-brand id=header" style="font-family: fantasy; font-size: x-large" href="{% url 'get-products' %}">ALL-INCLUSIVE</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -125,37 +125,56 @@
           </li>
         </ul>
 
-      <!-- Icon of basket in Navbar -->
-        <div>
-          {% if user.is_authenticated %}
-          <a href="{% url 'in-basket' %}">
-            <i class="fa fa-shopping-cart position-relative" aria-hidden="true" style="font-size: 30px; margin-left: 25px; color: black"></i>
-          </a>
-          {% endif %}
-        </div>
+{#      Пробовал - можно удалить !#}
+{#        <div class="basket">#}
+{#          {% with total_items=basket_items|length %}#}
+{#            {% if basket_items|length > 0 %}#}
+{#              In basket#}
+{#              <a href="{% url "in-basket" %}">#}
+{#              {{ total_quantity }} шт.#}
+{#              </a>#}
+{#            {% else %}#}
+{#            Корзина пустая#}
+{#            {% endif %}#}
+{#          {% endwith %}#}
+{#        </div>#}
 
-      <!--2 Вар "Icon of basket in Navbar - пробовал вывести над иконкой "количество товара ! -->
+
+
+      <!-- Icon of basket in Navbar -->
 {#        <div>#}
 {#          {% if user.is_authenticated %}#}
 {#          <a href="{% url 'in-basket' %}">#}
-{#            <i class="fa fa-shopping-cart position-relative" aria-hidden="true" style="font-size: 30px; margin-left: 25px; color: black">#}
-{#              <span class="position-absolute start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 10px">#}
-{#                {{ basket_item.quantity }}#} !!!
-{#                <span class="visually-hidden">unread messages</span>#}
-{#              </span>#}
-{#            </i>#}
+{#            <i class="fa fa-shopping-cart position-relative" aria-hidden="true" style="font-size: 30px; margin-left: 25px; color: black"></i>#}
 {#          </a>#}
 {#          {% endif %}#}
 {#        </div>#}
 
-      <!-- Total price in Navbar -->
-        <div>
-          {% if user.is_authenticated %}
-            <button type="button" class="btn btn-outline-secondary" style="margin-left: 20px">
-              <strong>Total price: {{ total_price }} BYN</strong>
-            </button>
-          {% endif %}
+      <!--2 Вар. Icon of basket in Navbar with a NUMBER above the icon ! -->
+      <!-- сделал через @login_required(login_url='login') см. views/basket -->
+        <div class="basket">
+{#          {% if user.is_authenticated %}#}
+            <a href="{% url 'in-basket' %}">
+              <i class="fa fa-shopping-cart position-relative" aria-hidden="true"
+                 style="font-size: 30px; margin-left: 25px; color: black">
+                <span class="position-absolute start-100 translate-middle badge rounded-pill bg-secondary"
+                      style="font-size: 11px">
+                  {{ total_quantity }}
+                  <span class="visually-hidden">unread messages</span>
+                </span>
+              </i>
+            </a>
+{#          {% endif %}#}
         </div>
+
+      <!-- Total price in Navbar -->
+{#        <div>#}
+{#          {% if user.is_authenticated %}#}
+{#            <button type="button" class="btn btn-outline-secondary" style="margin-left: 20px">#}
+{#              <strong>Total: {{ total_price }} BYN</strong>#}
+{#            </button>#}
+{#          {% endif %}#}
+{#        </div>#}
 
 
 {#        <button type="button" class="btn btn-outline-secondary position-relative">#}
@@ -323,7 +342,7 @@
 
 
    <div class="container">
-   <!-- Message about: Registration completed successfully! You can login to the site!-->
+   <!-- Message about: Registration completed successfully! You can log to the site!-->
      {% if messages %}
        <ul class="messages text-center" style="padding-top: 55px; color: darkslateblue; font-size: 20px">
          {% for message in messages %}

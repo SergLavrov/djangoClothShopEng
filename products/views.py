@@ -8,7 +8,6 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required, permission_required
 
 
-
 def get_products(request: HttpRequest) -> HttpResponse:
     products = Product.objects.filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})

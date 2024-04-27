@@ -33,10 +33,11 @@
 
           <br>
 
-          {% if user.is_authenticated %}
-          <a href="{% url 'add-to-basket' product.id %}" class="btn btn-outline-secondary">Add to basket</a>
-{#          <a href="#" class="btn btn-outline-secondary">Checkout</a>#}
-          {% endif %}
+{#          {% if user.is_authenticated %}#}
+            <a href="{% url 'add-to-basket' product.id %}" class="btn btn-outline-secondary">Add to basket</a>
+            <a href="{% url 'get-products' %}" class="btn btn-outline-secondary">Back</a>
+            {#          <a href="#" class="btn btn-outline-secondary">Checkout</a>#}
+{#          {% endif %}#}
         </div>
 
     </div>

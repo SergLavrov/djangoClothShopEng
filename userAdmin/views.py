@@ -78,10 +78,6 @@ def register_user(request: HttpRequest) -> HttpResponse:
 #         return render(request, 'userAdmin/profile.html', data)
 
 
-
-
-
-
 # def register_user(request: HttpRequest):
 #     if request.method == 'POST':
 #         username = request.POST['username']
@@ -107,17 +103,21 @@ def register_user(request: HttpRequest) -> HttpResponse:
 #         return render(request, 'userAdmin/register.html')
 
 
-
 def login_user(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect(reverse('get-products'))
-        else:
-            return render(request, 'userAdmin/login.html')
+        try:
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect(reverse('get-products'))
+            else:
+                raise ValidationError('Username or password is incorrect!')
+            #     return render(request, 'userAdmin/login.html')
+        except ValidationError as e:
+            error = str(e)
+            return render(request, 'userAdmin/login.html', {'error': error})
     else:
         return render(request, 'userAdmin/login.html')
 

@@ -9,23 +9,28 @@
 
         <h2 class="text-center mb-6">Login</h2>
 
-        <form method="post" action="{% url 'login' %}">
-          {% csrf_token %}
-
-          <div class="form-group mb-3">
-            <label for="username" class="form-label">User name</label>
-            <input type="text" class="form-control" id="username" name="username">
+        <div class="alert alert-lightgrey" role="alert">
+          <div class="alert_message" style="text-align: center; color: darkslateblue">
+            {{ error }}
           </div>
 
-          <div class="form-group mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" name="password">
-          </div>
+          <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
 
-          <button type="submit" class="btn btn-secondary">Enter</button>
-          <a href="{% url "register" %}" class="btn btn-link" style="color: dimgrey">Register</a>
+            <div class="form-group mb-3">
+              <label for="username" class="form-label">User name</label>
+              <input type="text" class="form-control" id="username" name="username">
+            </div>
 
-        </form>
+            <div class="form-group mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" name="password">
+            </div>
+
+            <button type="submit" class="btn btn-secondary">Enter</button>
+            <a href="{% url 'register' %}" class="btn btn-link" style="color: dimgrey">Register</a>
+          </form>
+        </div>
       </div>
       <div class="col-3"></div>
     </div>

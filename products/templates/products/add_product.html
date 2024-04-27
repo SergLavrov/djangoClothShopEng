@@ -4,7 +4,7 @@
 
   <div class="row col-12 offset-lg-2 col-lg-8">
 
-    <h4 class="pt-5" style="text-align: center">Add product:</h4>
+    <h4 class="pt-5" style="text-align: center; padding-bottom: 10px">Add product:</h4>
 
     {% if error %}
       <div class="alert alert-danger" role="alert">
@@ -113,12 +113,12 @@
                placeholder="Enter a short description of the product">
       </div>
 
-      <div class="col-12 pb-3">
+      <div class="col-12 pb-3" style="margin-bottom: 15px; padding-top: 10px">
         <label for="image">Image</label>
         <input type="file" name="image" id="image">
       </div>
 
-      <div class="col-12">
+      <div class="col-12" style="padding-bottom: 15px">
         <button type="submit" class="btn btn-secondary">Save</button>
 {#                                      При нажатии на SUBMIT данные отправляются на СЕРВЕР командой:#}
 {#                                      см выше:<form method="POST" class="row" action="{% url 'add-product' %}">#}
