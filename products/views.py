@@ -341,7 +341,6 @@ def update_product(request, product_id: int):
                 'companies': company_list,
                 'error': error,
             }
-
             return render(request, 'products/update_product.html', data)
 
     else:
@@ -362,47 +361,6 @@ def update_product(request, product_id: int):
         }
 
         return render(request, 'products/update_product.html', data)
-
-
-
-
-
-
-
-
-
-
-
-
-        # product = Product.objects.get(id=product_id)
-        # categories = Category.objects.all()                    # Если запрос GET, то:
-        # seasons = Season.objects.all()                         # функция извлекает все данные товара с ForeignKey из БД
-        # compositions = ProductComposition.objects.all()
-        # size_scales = SizeScale.objects.all()
-        # companies = Company.objects.all()
-        #
-        # data = {
-        #     'product_id': product.id,
-        #     'name_prod': product.name_prod,
-        #     'article': product.article,
-        #     'description': product.description,
-        #     'color': product.color,
-        #     'price': product.price,
-        #     'product_count': product.product_count,
-        #     'categories': categories,
-        #     'category_id': product.category.id,
-        #     'seasons': seasons,
-        #     'season_id': product.season.id,
-        #     'compositions': compositions,
-        #     'product_composition_id': product.product_composition.id,
-        #     'size_scales': size_scales,
-        #     'size_scale_id': product.size_scale.id,
-        #     'companies': companies,
-        #     'company_id': product.company.id,
-        #     'image': product.image,
-        # }
-        # return render(request, 'products/get_product_by_id.html', data)
-
 
 
 # @permission_required('products.change2')
@@ -435,10 +393,10 @@ def update_product(request, product_id: int):
 #     size_scale_id = request.POST.get('size_scale_id')
 #     company_id = request.POST.get('company_id')
 #     image = request.FILES.get('image')
-#                                            # Идентификаторы 'КАТЕГОРИИ', 'СЕЗОНА' и т.д. из POST-запроса!!!
-#                                            # Почему назвали category_id и season_id - из Models.py -> Class Product !!!
-#                                            # category = models.ForeignKey(Category...)
-#                                            # season = models.ForeignKey(Season ...)
+#                                         # Идентификаторы 'КАТЕГОРИИ', 'СЕЗОНА' и т.д. из POST-запроса!!!
+#                                         # Почему назвали category_id и season_id - из Models.py -> Class Product !!!
+#                                         # category = models.ForeignKey(Category...)
+#                                         # season = models.ForeignKey(Season ...)
 #
 #     category = Category.objects.get(id=category_id)           # Находим КАТЕГОРИЮ по соотв-щим идентификатору
 #     season = Season.objects.get(id=season_id)
@@ -460,10 +418,9 @@ def update_product(request, product_id: int):
 #     product.company = company
 #     product.image = image
 #
-#     product.save()                             # СОХРАНЯЕМ изменения в БАЗЕ данных
+#     product.save()
 #
 #     return HttpResponseRedirect(reverse('get-products-list'))
-
 
 def delete_product(request, product_id: int):
     if request.method == 'POST':
@@ -471,20 +428,15 @@ def delete_product(request, product_id: int):
 
         product.is_deleted = True
         product.save()
-
         return HttpResponseRedirect(reverse('get-products-list'))
-
     else:
         product = Product.objects.get(id=product_id)
-
         data = {
             'product_id': product.id,
             'name_prod': product.name_prod,
             'article': product.article,
         }
         return render(request, 'products/delete_product.html', data)
-
-
 
 
 def search_product(request):
@@ -494,8 +446,8 @@ def search_product(request):
     - request: объект HTTP-запроса
     Возвращает:
     - Если метод запроса 'GET', отображает шаблон 'companies/products.html'.
-    - Если метод запроса не 'GET',  то фильтрует объекты Car на основе "строки поиска" и отображает шаблон
-                                            'autopark/cars.html' с отфильтрованным списком автомобилей.
+    - Если метод запроса не 'GET',  то фильтрует объекты Product на основе "строки поиска" и отображает шаблон
+                                            'products/all_products.html' с отфильтрованным списком автомобилей.
     """
     if request.method == 'GET':
         return render(request, 'products/all_products.html')

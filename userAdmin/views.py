@@ -5,12 +5,7 @@ from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.shortcuts import render
 from django.contrib import messages
-from basket.models import Basket
 
-from .models import Profile
-
-
-# <!-- With using try / except -->
 
 def register_user(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
@@ -53,31 +48,50 @@ def register_user(request: HttpRequest) -> HttpResponse:
         return render(request, 'userAdmin/register.html')
 
 
-# def profile_user(request: HttpRequest):
+# Немного переделал код (if user is None:)!
+def login_user(request: HttpRequest) -> HttpResponse:
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        try:
+            if user is None:
+                raise ValidationError('Username or password is incorrect!')
+            else:
+                login(request, user)
+                return HttpResponseRedirect(reverse('get-products'))
+        except ValidationError as e:
+            error = str(e)
+            return render(request, 'userAdmin/login.html', {'error': error})
+    else:
+        return render(request, 'userAdmin/login.html')
+
+
+
+# def login_user(request: HttpRequest) -> HttpResponse:
 #     if request.method == 'POST':
-#         first_name = request.POST['first_name']
-#         last_name = request.POST['last_name']
-#         phone = request.POST['phone']
-#         about = request.POST['about']
-#
-#         profile = Profile(user=request.user, about=about, first_name=first_name, last_name=last_name, phone=phone)
-#         profile.save()
-#
-#         return HttpResponseRedirect(reverse('get-products'))
-#
+#         username = request.POST['username']
+#         password = request.POST['password']
+#         user = authenticate(username=username, password=password)
+#         try:
+#             if user is not None:
+#                 login(request, user)
+#                 return HttpResponseRedirect(reverse('get-products'))
+#             else:
+#                 raise ValidationError('Username or password is incorrect!')
+#         except ValidationError as e:
+#             error = str(e)
+#             return render(request, 'userAdmin/login.html', {'error': error})
 #     else:
-#         data = {
-#             'first_name': request.user.first_name,
-#             'last_name': request.user.last_name,
-#             'phone': request.user.profile.phone,
-#             'about': request.user.profile.about,
-#             'username': request.user.username,
-#             'email': request.user.email,
-#             'baskets': Basket.objects.filter(user=request.user)
-#         }
-#         return render(request, 'userAdmin/profile.html', data)
+#         return render(request, 'userAdmin/login.html')
 
 
+def logout_user(request: HttpRequest):
+    logout(request)
+    return HttpResponseRedirect(reverse('get-products'))
+
+
+# <!-- Without using try / except -->
 # def register_user(request: HttpRequest):
 #     if request.method == 'POST':
 #         username = request.POST['username']
@@ -103,25 +117,26 @@ def register_user(request: HttpRequest) -> HttpResponse:
 #         return render(request, 'userAdmin/register.html')
 
 
-def login_user(request: HttpRequest) -> HttpResponse:
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        try:
-            if user is not None:
-                login(request, user)
-                return HttpResponseRedirect(reverse('get-products'))
-            else:
-                raise ValidationError('Username or password is incorrect!')
-            #     return render(request, 'userAdmin/login.html')
-        except ValidationError as e:
-            error = str(e)
-            return render(request, 'userAdmin/login.html', {'error': error})
-    else:
-        return render(request, 'userAdmin/login.html')
-
-
-def logout_user(request: HttpRequest):
-    logout(request)
-    return HttpResponseRedirect(reverse('get-products'))
+# def profile_user(request: HttpRequest):
+#     if request.method == 'POST':
+#         first_name = request.POST['first_name']
+#         last_name = request.POST['last_name']
+#         phone = request.POST['phone']
+#         about = request.POST['about']
+#
+#         profile = Profile(user=request.user, about=about, first_name=first_name, last_name=last_name, phone=phone)
+#         profile.save()
+#
+#         return HttpResponseRedirect(reverse('get-products'))
+#
+#     else:
+#         data = {
+#             'first_name': request.user.first_name,
+#             'last_name': request.user.last_name,
+#             'phone': request.user.profile.phone,
+#             'about': request.user.profile.about,
+#             'username': request.user.username,
+#             'email': request.user.email,
+#             'baskets': Basket.objects.filter(user=request.user)
+#         }
+#         return render(request, 'userAdmin/profile.html', data)
