@@ -16,10 +16,10 @@
 
       {% csrf_token %}
 
-    <div class="col-12 col-lg-6 pb-3">
-        <label for="inputnameproduct" class="form-label fw-medium">Name product</label>
-        <input type="text" name="name_prod" class="form-control" id="inputnameproduct" placeholder="Enter the product name">
-    </div>
+      <div class="col-12 col-lg-6 pb-3">
+          <label for="inputnameproduct" class="form-label fw-medium">Name product</label>
+          <input type="text" name="name_prod" class="form-control" id="inputnameproduct" placeholder="Enter the product name">
+      </div>
 
       <div class="col-12 col-lg-6 pb-3">
         <label for="inputarticle" class="form-label fw-medium">Article</label>
@@ -41,8 +41,9 @@
         </select>
       </div>
 {#      P.S.: value="{{ category.id }}">{{ category.name_category }}#}
-{#            "category.name_category" --> "category" берем из class Category(models.Model):#}
-{#                                   --> имя: name_category = models.CharField(max_length=50)#}
+{#            "category.name_category" --> "category" берем из class Product(models.Model):#}
+{#                                   --> имя: name_category = из class Category #}
+{#                                   name_category = models.CharField(max_length=50)#}
 
       <div class="col-12 col-lg-6 pb-3">
         <label for="inputseason" class="form-label fw-medium">Season</label>

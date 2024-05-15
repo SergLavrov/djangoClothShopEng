@@ -67,7 +67,6 @@ def login_user(request: HttpRequest) -> HttpResponse:
         return render(request, 'userAdmin/login.html')
 
 
-
 # def login_user(request: HttpRequest) -> HttpResponse:
 #     if request.method == 'POST':
 #         username = request.POST['username']

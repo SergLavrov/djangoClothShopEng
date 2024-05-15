@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Company(models.Model):                        # КОМПАНИИ/ПРОДАВЦЫ
     name_company = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
@@ -10,17 +11,21 @@ class Company(models.Model):                        # КОМПАНИИ/ПРОД�
         ordering = ['name_company']
 
 
-class Category(models.Model):                      # КАТЕГОРИИ ТОВАРОВ (ОДЕЖДА, ОБУВЬ, АКСЕССУАРЫ)
-        name_category = models.CharField(max_length=50)
+class Category(models.Model):                       # КАТЕГОРИИ ТОВАРОВ (ОДЕЖДА, ОБУВЬ, АКСЕССУАРЫ)
+    name_category = models.CharField(max_length=50)
+
 
 class Season(models.Model):
     name_season = models.CharField(max_length=50)
 
+
 class ProductComposition(models.Model):                         # СОСТАВ ТОВАРА
     product_composition = models.CharField(max_length=50)
 
+
 class SizeScale(models.Model):
     size_scale = models.IntegerField()
+
 
 class Product(models.Model):
     name_prod = models.CharField(max_length=50)
@@ -39,6 +44,6 @@ class Product(models.Model):
     # file = models.FileField('car_file/')  # можно прикрепить ещё файл (например doc, txt и т.д.)
     # image = models.ImageField(upload_to='/products_images', blank=True)          # (ФОТО товара)
 
-
     # class Meta:
-    #     ordering = ['name_prod']
+    # ordering = ['id']
+    #     ordering = ['name']

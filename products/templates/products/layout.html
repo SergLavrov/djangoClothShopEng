@@ -48,7 +48,7 @@
         padding-top: 6px;
     }
     .navbar2 {
-        height: 30px;
+        height: 35px;
     }
   </style>
 </head>
@@ -73,7 +73,7 @@
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="{% url 'get-clothing' %}">Cloth</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="uk-nav-divider dropdown-item" href="{% url 'get-pants' %}">Pants</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-pants' %}">Pants</a></li>
               <li><a class="dropdown-item" href="{% url 'get-jumpers' %}">Jumpers</a></li>
               <li><a class="dropdown-item" href="{% url 'get-jeans' %}">Jeans</a></li>
               <li><a class="dropdown-item" href="{% url 'get-jackets' %}">Jackets</a></li>
@@ -113,8 +113,9 @@
 
         <ul class="navbar-nav ms-auto ms-2 mb-lg-0">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle"  style="font-family: fantasy; font-size: inherit" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Contacts  |  8-212-555-00-55
+            <a class="nav-link dropdown-toggle" style="font-family: fantasy; font-size: inherit"
+               href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Contacts | 8-212-555-00-55
             </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item">8-212-555-00-55</a></li>
@@ -125,21 +126,9 @@
           </li>
         </ul>
 
-{#      Пробовал - можно удалить !#}
-{#        <div class="basket">#}
-{#          {% with total_items=basket_items|length %}#}
-{#            {% if basket_items|length > 0 %}#}
-{#              In basket#}
-{#              <a href="{% url "in-basket" %}">#}
-{#              {{ total_quantity }} шт.#}
-{#              </a>#}
-{#            {% else %}#}
-{#            Корзина пустая#}
-{#            {% endif %}#}
-{#          {% endwith %}#}
-{#        </div>#}
+        {% block headerbasket %}
 
-
+        {% endblock %}
 
       <!-- Icon of basket in Navbar -->
 {#        <div>#}
@@ -152,20 +141,20 @@
 
       <!--2 Вар. Icon of basket in Navbar with a NUMBER above the icon ! -->
       <!-- сделал через @login_required(login_url='login') см. views/basket -->
-        <div class="basket">
+{#        <div class="basket">#}
 {#          {% if user.is_authenticated %}#}
-            <a href="{% url 'in-basket' %}">
-              <i class="fa fa-shopping-cart position-relative" aria-hidden="true"
-                 style="font-size: 30px; margin-left: 25px; color: black">
-                <span class="position-absolute start-100 translate-middle badge rounded-pill bg-secondary"
-                      style="font-size: 11px">
-                  {{ total_quantity }}
-                  <span class="visually-hidden">unread messages</span>
-                </span>
-              </i>
-            </a>
+{#            <a href="{% url 'in-basket' %}">#}
+{#              <i class="fa fa-shopping-cart position-relative" aria-hidden="true"#}
+{#                 style="font-size: 30px; margin-left: 25px; color: black">#}
+{#                <span class="position-absolute start-100 translate-middle badge rounded-pill bg-secondary"#}
+{#                      style="font-size: 11px">#}
+{#                  {{ total_quantity }}#}
+{#                  <span class="visually-hidden">unread messages</span>#}
+{#                </span>#}
+{#              </i>#}
+{#            </a>#}
 {#          {% endif %}#}
-        </div>
+{#        </div>#}
 
       <!-- Total price in Navbar -->
 {#        <div>#}
@@ -184,7 +173,6 @@
 {#            <span class="visually-hidden">unread messages</span>#}
 {#          </span>#}
 {#        </button>#}
-
 
 
 
@@ -212,10 +200,10 @@
 
             {% if user.is_authenticated %}
               <a class="nav-link active col" aria-current="page">{{ user.username }}</a>
+
             {% endif %}
           </li>
         </ul>
-
 
 
 <!-- Вариант 1 - БЕЗ "Модального окна" - через Шаблон.html -->
@@ -269,12 +257,11 @@
 {#        </ul>#}
 
 <!-- Button Search -->
-        <form class="d-flex gap-2" style="width: 240px" role="search" method="post" action="{% url 'search-product' %}">
+        <form method="POST" class="d-flex gap-2" style="width: 240px" role="search" action="{% url 'search-product' %}">
           {% csrf_token %}
           <input name="search_string" class="form-control ms-4" type="search" placeholder="search" aria-label="Search">
           <button class="btn btn-outline-secondary" type="submit">Search</button>
         </form>
-
 
 
 <!-- Basket -->
@@ -321,7 +308,11 @@
 
    <nav class="navbar2 navbar-expand-lg navbar-light top-menu">
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-         <ul class="navbar-nav me-auto mb-2 mb-lg-0 column-gap-5" style="margin-left: 850px">
+         <ul class="navbar-nav me-auto mb-2 mb-lg-0 column-gap-5" style="margin-left: 800px">
+           <li class="nav-item">
+            <a class="nav-link" aria-current="page" style="color: black; font-size: 15px" href="{% url 'ticket-reviews' %}">
+              <b>Reviews</b></a>
+          </li>
             <li class="nav-item">
               <a class="nav-link" aria-current="page" style="color: black; font-size: 15px" href="{% url 'about' %}">
                 <b>About online-shop</b></a>
@@ -357,8 +348,109 @@
          {% endfor %}
        </ul>
      {% endif %}
+
      {% block content %}{% endblock %}
    </div>
+
+   <!-- Pagination -->
+
+{#   {% for product in page_obj %}#}
+{# Each "contact" is a Contact model object. #}
+{#     {{ product.image.url|upper }}<br>#}
+{#     {{ product.name_prod }}|upper }}<br>#}
+{#     {{ product.article }}|upper }}<br>#}
+{#     {{ product.price }}<br>#}
+{#     {{ product.description }}<br>#}
+{#   {% endfor %}#}
+{##}
+{#   <div class="pagination">#}
+{#    <span class="step-links">#}
+{#        {% if page_obj.has_previous %}#}
+{#          <a href="?page=1">&laquo; first</a>#}
+{#          <a href="?page={{ page_obj.previous_page_number }}">previous</a>#}
+{#        {% endif %}#}
+{##}
+{#      <span class="current">#}
+{#            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.#}
+{#        </span>#}
+{##}
+{#      {% if page_obj.has_next %}#}
+{#        <a href="?page={{ page_obj.next_page_number }}">next</a>#}
+{#        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>#}
+{#      {% endif %}#}
+{#    </span>#}
+{#   </div>#}
+
+
+{#   <nav class="list-pages">#}
+{#     <ul>#}
+{#       {% for p in paginator.page_range %}#}
+{#         {% if page_obj.number == p %}#}
+{#           <li class="page-num page-num-selected">{{ p }}</li>#}
+{#         {% else %}#}
+{#           <li class="page-num">#}
+{#             <a href="?page={{ p }}">{{ p }}</a>#}
+{#           </li>#}
+{#         {% endif %}#}
+{#       {% endfor %}#}
+{#     </ul>#}
+{#   </nav>#}
+
+{#   {% if is_paginated %}#}
+{#     <ul class="pagination">#}
+{#       {% if page_obj.has_previous %}#}
+{#         <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>#}
+{#       {% else %}#}
+{#         <li class="disabled"><span>&laquo;</span></li>#}
+{#       {% endif %}#}
+{#       {% for i in paginator.page_range %}#}
+{#         {% if page_obj.number == i %}#}
+{#           <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>#}
+{#         {% else %}#}
+{#           <li><a href="?page={{ i }}">{{ i }}</a></li>#}
+{#         {% endif %}#}
+{#       {% endfor %}#}
+{#       {% if page_obj.has_next %}#}
+{#         <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>#}
+{#       {% else %}#}
+{#         <li class="disabled"><span>&raquo;</span></li>#}
+{#       {% endif %}#}
+{#     </ul>#}
+{#   {% endif %}#}
+
+{#   {% if page_obj.has_other_pages %}#}
+{#     <nav aria-label="...">#}
+{#       <ul class="pagination">#}
+{##}
+{#         {% if page_obj.has_previous %}#}
+{#           <li class="page-item">#}
+{#             <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>#}
+{#           </li>#}
+{#         {% endif %}#}
+{##}
+{#         {% for p in page_obj.paginator.page_range %}#}
+{##}
+{#           {% if page_obj.number == p %}#}
+{#             <li class="page-item active" aria-current="page">#}
+{#               <a class="page-link" href="?page={{ p }}">{{ p }} <span class="sr-only"></span></a>#}
+{#             </li>#}
+{#           {% elif p > page_obj.number|add:-3 and p < page_obj.number|add:3 %}#}
+{#             <li class="page-item">#}
+{#               <a class="page-link" href="?page={{ p }}">{{ p }}</a>#}
+{#             </li>#}
+{#           {% endif %}#}
+{##}
+{#         {% endfor %}#}
+{##}
+{#         {% if page_obj.has_next %}#}
+{#           <li class="page-item">#}
+{#             <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>#}
+{#           </li>#}
+{#         {% endif %}#}
+{##}
+{#       </ul>#}
+{#     </nav>#}
+{#   {% endif %}#}
 
 
   <footer style="padding-top: 20px">
@@ -396,16 +488,25 @@
             </div>
 
             <div class="col-md-3 col-6">
-              <h4>REVIEWS</h4>
+              <h4>FEEDBACK</h4>
               <ul class="list-unstyled">
-                <li><a href="#">Reviews</a></li>
-                <li><a href="#">Suggestions for improvement</a></li>
+                <li><a href="{% url 'ticket-reviews' %}">Reviews</a></li>
+                <li><a href="{% url 'create-ticket' %}">Ask a question</a></li>
+                <li><a href="{% url 'ticket-list' %}">My feedback</a></li>
               </ul>
             </div>
         </div>
       </div>
     </section>
   </footer>
+
+
+
+            {#ДЛЯ FEEDBACK#}
+   {#              <a class="nav-link active col" aria-current="page" href="{% url 'ticket-list' %}">Tickets</a>#}
+{#      <button data-bs-toggle="modal" data-bs-target="#feedbackModal">#}
+{#        Tickets#}
+{#      </button>#}
 
 
 <!-- Modal window for ENTER -->
@@ -467,6 +568,44 @@
 {#           <div class="modal-footer">#}
 {#             <button type="submit" class="btn btn-primary">Register</button>#}
 {#             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>#}
+{#           </div>#}
+{#         </form>#}
+{#       </div>#}
+{#     </div>#}
+{#   </div>#}
+
+
+   <!-- Modal window for feedback -->
+{#   <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"#}
+{#        aria-hidden="true">#}
+{#     <div class="modal-dialog" role="document">#}
+{#       <div class="modal-content">#}
+{#         <div class="modal-header justify-content-center">#}
+{#           <h4>Feedback</h4>#}
+{#         </div>#}
+{#         <form method="post" action="{% url 'create-ticket' %}">#}
+{#           {% csrf_token %}#}
+{#           <div class="modal-body">#}
+{#             <div class="form-group">#}
+{#               <label for="title">Title</label>#}
+{#               <input type="text" class="form-control" id="title" name="title">#}
+{#             </div>#}
+{#             <div class="form-group">#}
+{#               <label for="category_id">Category</label>#}
+{#               <select class="form-control" id="category_id" name="category_id">#}
+{#                   {% for category in tickets_category %}#}
+{#                      <option value="{{ category.id }}">{{ category.name }}</option>#}
+{#                   {% endfor %}#}
+{#               </select>#}
+{#             </div>#}
+{#             <div class="form-group">#}
+{#               <label for="description">Description</label>#}
+{#               <textarea class="form-control" id="description" rows="5" name="description"></textarea>#}
+{#             </div>#}
+{#           </div>#}
+{#           <div class="modal-footer">#}
+{#             <button type="submit" class="btn btn-primary">Send</button>#}
+{#             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
 {#           </div>#}
 {#         </form>#}
 {#       </div>#}

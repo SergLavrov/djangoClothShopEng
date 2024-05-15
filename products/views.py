@@ -6,11 +6,23 @@ from django.shortcuts import render
 from .models import Product, Company, Category, Season, ProductComposition, SizeScale
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required, permission_required
+# from django.views.generic import ListView
 
 
 def get_products(request: HttpRequest) -> HttpResponse:
     products = Product.objects.filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
+
+# <!-- Pagination -->
+# class ProductListView(ListView):
+#     paginate_by = 10
+#     model = Product
+# #     # queryset = Product.objects.filter(is_deleted=False)
+#     template_name = 'products/layout.html'
+#     context_object_name = 'products'
+#
+#     # def get_queryset(self):
+#     #     return Product.objects.filter(is_deleted=False)
 
 
 def get_products_list(request: HttpRequest) -> HttpResponse:
@@ -21,6 +33,15 @@ def get_products_list(request: HttpRequest) -> HttpResponse:
         return render(request, 'products/products_list.html', {'products': products})
     else:
         return render(request, 'userAdmin/login.html')
+
+
+# def products_category(request, category_id=4):
+#     data = {'categories': Category.objects.all()}
+#     if category_id:
+#         data.update({'products': Product.objects.filter(category__id=category_id)})
+#     else:
+#         data.update({'products': Product.objects.all()})
+#     return render(request, 'products/all_products.html', data)
 
 
 def get_clothing(request):
@@ -160,7 +181,7 @@ def add_product(request):
     в базу данных, затем перенаправляется на URL 'get-products'.
     """
     if request.method == 'GET':
-        category_list = Category.objects.all()          # Если запрос GET, то:
+        category_list = Category.objects.all()              # Если запрос GET, то:
         season_list = Season.objects.all()                  # функция извлекает все данные товара с ForeignKey из БД
         composition_list = ProductComposition.objects.all()
         size_scale_list = SizeScale.objects.all()
@@ -199,14 +220,6 @@ def add_product(request):
                     or not company_id or not image):
                 raise ValidationError('All fields are required')
 
-            # name_prod = str(name_prod)
-            # if (not isinstance(name_prod, str)):
-            #     raise ValidationError('Field cannot be a number')
-            #
-            # color = str(color)
-            # if (not isinstance(color, str)):
-            #     raise ValidationError('Field cannot be a number')
-
             price = float(price)
             if price <= 0:
                 raise ValidationError('Price must be greater than 0')
@@ -222,7 +235,7 @@ def add_product(request):
                 raise ValidationError('Field must be a number')
 
             category = Category.objects.get(id=category_id)  # Находим КАТЕГОРИЮ по соотв-щему идентификатору
-            season = Season.objects.get(id=season_id)  # Находим CЕЗОН по соотв-щему ID
+            season = Season.objects.get(id=season_id)          # Находим CЕЗОН по соотв-щему ID
             product_composition = ProductComposition.objects.get(id=product_composition_id)  # СОСТАВ
             size_scale = SizeScale.objects.get(id=size_scale_id)  # РАЗМЕР
             company = Company.objects.get(id=company_id)  # Производителя
@@ -440,15 +453,6 @@ def delete_product(request, product_id: int):
 
 
 def search_product(request):
-    """
-    Функция для поиска автомобилей по искомому параметру.
-    Параметры:
-    - request: объект HTTP-запроса
-    Возвращает:
-    - Если метод запроса 'GET', отображает шаблон 'companies/products.html'.
-    - Если метод запроса не 'GET',  то фильтрует объекты Product на основе "строки поиска" и отображает шаблон
-                                            'products/all_products.html' с отфильтрованным списком автомобилей.
-    """
     if request.method == 'GET':
         return render(request, 'products/all_products.html')
     else:
@@ -466,7 +470,7 @@ def search_product(request):
                 | Q(company__name_company__icontains=search_string)
             )
         except ValidationError:
-            product_list = Product.objects.all()
+            product_list = Product.objects.filter(is_deleted=False)
 
         return render(request, 'products/all_products.html', {'products': product_list})
 
@@ -474,3 +478,73 @@ def search_product(request):
 # Q(category__name_category__icontains=search_string)
 # category - берем из: class Product(models.Model)
 # name_category берем из: class Category(models.Model)
+
+
+# def search_products_list(request):
+#     if request.method == 'GET':
+#         return render(request, 'products/all_products.html')
+#
+#     else:
+#         products_list = (Product.objects.filter(category__name_category='Shirt').filter(season__name_season='Summer').
+#                      filter(product_composition__product_composition='Cotton'))
+#
+#     return render(request, 'products/all_products.html', {'products': products_list})
+
+# books = Book.objects.filter(Q(author='John Smith') & Q(year=2021) & Q(genre='Fiction'))
+# books = Book.objects.filter(author='John Smith').filter(year=2021)
+
+
+def search_products_list(request):
+        # Если метод запроса равен 'POST', то функция извлекает данные из запроса POST из заполненных полей шаблона
+    if request.method == 'POST':
+        category_id = request.POST.get('category_id')
+        season_id = request.POST.get('season_id')
+        product_composition_id = request.POST.get('product_composition_id')
+        size_scale_id = request.POST.get('size_scale_id')
+        company_id = request.POST.get('company_id')
+
+        category = Category.objects.get(id=category_id)    # Находим КАТЕГОРИЮ по соотв-щему идентификатору
+        season = Season.objects.get(id=season_id)
+        product_composition = ProductComposition.objects.get(id=product_composition_id)
+        size_scale = SizeScale.objects.get(id=size_scale_id)
+        company = Company.objects.get(id=company_id)
+
+        products_list = (Product.objects.
+                         filter(category=category).
+                         filter(season=season).
+                         filter(product_composition=product_composition).
+                         filter(size_scale=size_scale).
+                         filter(company=company))
+
+                         # filter(category__product=category).
+                         # filter(season__product=season).
+                         # filter(product_composition__product=product_composition).
+                         # filter(size_scale__product=size_scale).
+                         # filter(company__product=company))
+
+        if not products_list:
+            products_list = Product.objects.all()
+
+        data = {
+            'products': products_list
+        }
+
+        return render(request, 'products/all_products.html', data)
+
+    else:
+        # products = Product.objects.all()
+        category_list = Category.objects.all()              # Если запрос GET, то:
+        season_list = Season.objects.all()                  # функция извлекает все данные товара с ForeignKey из БД
+        composition_list = ProductComposition.objects.all()
+        size_scale_list = SizeScale.objects.all()
+        company_list = Company.objects.all()
+
+        data = {
+            # 'products': products,                  # таким образом передали в шаблон 5 словарей:
+            'categories': category_list,           # ДЛЯ УДОБСТВА заполнения этих полей в шаблоне - делаем их в виде
+            'seasons': season_list,                # выпадающего списка - см. models.py !!!
+            'compositions': composition_list,
+            'size_scales': size_scale_list,
+            'companies': company_list,
+        }
+        return render(request, 'products/filter_left.html', data)
