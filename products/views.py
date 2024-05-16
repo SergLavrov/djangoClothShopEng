@@ -8,10 +8,30 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required, permission_required
 # from django.views.generic import ListView
 
+# 1 Вариант
+# def get_products(request: HttpRequest) -> HttpResponse:
+#     products = Product.objects.filter(is_deleted=False)
+#     return render(request, 'products/all_products.html', {'products': products})
 
+# 2 Вариант - с учетом "Filter"
 def get_products(request: HttpRequest) -> HttpResponse:
     products = Product.objects.filter(is_deleted=False)
-    return render(request, 'products/all_products.html', {'products': products})
+    category_list = Category.objects.all()                    # Если запрос GET, то:
+    season_list = Season.objects.all()                        # функция извлекает ВСЕ данные товара с ForeignKey из БД
+    composition_list = ProductComposition.objects.all()
+    size_scale_list = SizeScale.objects.all()
+    company_list = Company.objects.all()
+
+    data = {
+        'products': products,
+        'categories': category_list,      # таким образом передали в шаблон 5 словарей:
+        'seasons': season_list,           # ДЛЯ УДОБСТВА заполнения этих полей в шаблоне - делаем их в виде
+        'compositions': composition_list, # выпадающего списка - см. models.py !!!
+        'size_scales': size_scale_list,
+        'companies': company_list,
+    }
+    return render(request, 'products/all_products.html', data)
+
 
 # <!-- Pagination -->
 # class ProductListView(ListView):
@@ -45,97 +65,97 @@ def get_products_list(request: HttpRequest) -> HttpResponse:
 
 
 def get_clothing(request):
-    products = Product.objects.filter(category__name_category='Сloth')
+    products = Product.objects.filter(category__name_category='Сloth').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_shoes(request):
-    products = Product.objects.filter(category__name_category='Shoes')
+    products = Product.objects.filter(category__name_category='Shoes').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_accessories(request):
-    products = Product.objects.filter(category__name_category='Accessories')
+    products = Product.objects.filter(category__name_category='Accessories').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_pants(request):
-    products = Product.objects.filter(name_prod='Pants')
+    products = Product.objects.filter(name_prod='Pants').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_jumpers(request):
-    products = Product.objects.filter(name_prod='Jumper')
+    products = Product.objects.filter(name_prod='Jumper').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_jeans(request):
-    products = Product.objects.filter(name_prod='Jeans')
+    products = Product.objects.filter(name_prod='Jeans').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_jackets(request):
-    products = Product.objects.filter(name_prod='Jacket')
+    products = Product.objects.filter(name_prod='Jacket').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_coats(request):
-    products = Product.objects.filter(name_prod='Coat')
+    products = Product.objects.filter(name_prod='Coat').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_shirts(request):
-    products = Product.objects.filter(name_prod='Shirt')
+    products = Product.objects.filter(name_prod='Shirt').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_tshirts(request):
-    products = Product.objects.filter(name_prod='T-shirt')
+    products = Product.objects.filter(name_prod='T-shirt').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_boots(request):
-    products = Product.objects.filter(name_prod='Boots')
+    products = Product.objects.filter(name_prod='Boots').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_sneakers(request):
-    products = Product.objects.filter(name_prod='Sneakers')
+    products = Product.objects.filter(name_prod='Sneakers').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_moccasins(request):
-    products = Product.objects.filter(name_prod='Moccasins')
+    products = Product.objects.filter(name_prod='Moccasins').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_list_shoes(request):
-    products = Product.objects.filter(name_prod='Shoes')
+    products = Product.objects.filter(name_prod='Shoes').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_ties(request):
-    products = Product.objects.filter(name_prod='Tie')
+    products = Product.objects.filter(name_prod='Tie').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_wallets(request):
-    products = Product.objects.filter(name_prod='Wallet')
+    products = Product.objects.filter(name_prod='Wallet').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_belts(request):
-    products = Product.objects.filter(name_prod='Belt')
+    products = Product.objects.filter(name_prod='Belt').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_bags(request):
-    products = Product.objects.filter(name_prod='Bag')
+    products = Product.objects.filter(name_prod='Bag').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_scavers(request):
-    products = Product.objects.filter(name_prod='Scarf')
+    products = Product.objects.filter(name_prod='Scarf').filter(is_deleted=False)
     return render(request, 'products/all_products.html', {'products': products})
 
 
@@ -146,7 +166,6 @@ def product_details(request, product_id):
         'size_scales': size_scale_list,
         'product': product
     }
-
     return render(request, 'products/product_details.html', data)
 
 
@@ -435,6 +454,7 @@ def update_product(request, product_id: int):
 #
 #     return HttpResponseRedirect(reverse('get-products-list'))
 
+
 def delete_product(request, product_id: int):
     if request.method == 'POST':
         product = Product.objects.get(id=product_id)
@@ -458,7 +478,7 @@ def search_product(request):
     else:
         search_string = request.POST.get('search_string')
         try:
-            product_list = Product.objects.filter(
+            product_list = Product.objects.filter(is_deleted=False).filter(
                 Q(name_prod__icontains=search_string)
                 | Q(article__icontains=search_string)
                 | Q(color__icontains=search_string)
@@ -469,6 +489,10 @@ def search_product(request):
                 # | Q(size_scale__size_scale__icontains=search_string)
                 | Q(company__name_company__icontains=search_string)
             )
+            if not product_list:
+                # product_list = Product.objects.all()
+                return render(request, 'products/nothing_is_find.html')
+
         except ValidationError:
             product_list = Product.objects.filter(is_deleted=False)
 
@@ -479,23 +503,13 @@ def search_product(request):
 # category - берем из: class Product(models.Model)
 # name_category берем из: class Category(models.Model)
 
-
-# def search_products_list(request):
-#     if request.method == 'GET':
-#         return render(request, 'products/all_products.html')
-#
-#     else:
-#         products_list = (Product.objects.filter(category__name_category='Shirt').filter(season__name_season='Summer').
-#                      filter(product_composition__product_composition='Cotton'))
-#
-#     return render(request, 'products/all_products.html', {'products': products_list})
-
+# Просто примеры:
 # books = Book.objects.filter(Q(author='John Smith') & Q(year=2021) & Q(genre='Fiction'))
 # books = Book.objects.filter(author='John Smith').filter(year=2021)
 
 
 def search_products_list(request):
-        # Если метод запроса равен 'POST', то функция извлекает данные из запроса POST из заполненных полей шаблона
+        # Если метод запроса 'POST', то функция извлекает данные из заполненных полей шаблона!
     if request.method == 'POST':
         category_id = request.POST.get('category_id')
         season_id = request.POST.get('season_id')
@@ -503,48 +517,60 @@ def search_products_list(request):
         size_scale_id = request.POST.get('size_scale_id')
         company_id = request.POST.get('company_id')
 
-        category = Category.objects.get(id=category_id)    # Находим КАТЕГОРИЮ по соотв-щему идентификатору
-        season = Season.objects.get(id=season_id)
-        product_composition = ProductComposition.objects.get(id=product_composition_id)
-        size_scale = SizeScale.objects.get(id=size_scale_id)
-        company = Company.objects.get(id=company_id)
+        # category = Category.objects.get(id=category_id)    # Находим КАТЕГОРИЮ по соотв-щему идентификатору
+        # season = Season.objects.get(id=season_id)
+        # product_composition = ProductComposition.objects.get(id=product_composition_id)
+        # size_scale = SizeScale.objects.get(id=size_scale_id)
+        # company = Company.objects.get(id=company_id)
 
-        products_list = (Product.objects.
-                         filter(category=category).
-                         filter(season=season).
-                         filter(product_composition=product_composition).
-                         filter(size_scale=size_scale).
-                         filter(company=company))
+        # products_list = (Product.objects.
+        #                  filter(category=category).
+        #                  filter(season=season).
+        #                  filter(product_composition=product_composition).
+        #                  filter(size_scale=size_scale).
+        #                  filter(company=company))
 
-                         # filter(category__product=category).
-                         # filter(season__product=season).
-                         # filter(product_composition__product=product_composition).
-                         # filter(size_scale__product=size_scale).
-                         # filter(company__product=company))
+        products_list = Product.objects.all()
+
+        if category_id:
+            category = Category.objects.get(id=category_id)
+            products_list = products_list.filter(category=category)
+
+        if season_id:
+            season = Season.objects.get(id=season_id)
+            products_list = products_list.filter(season=season)
+
+        if product_composition_id:
+            product_composition = ProductComposition.objects.get(id=product_composition_id)
+            products_list = products_list.filter(product_composition=product_composition)
+
+        if size_scale_id:
+            size_scale = SizeScale.objects.get(id=size_scale_id)
+            products_list = products_list.filter(size_scale=size_scale)
+
+        if company_id:
+            company = Company.objects.get(id=company_id)
+            products_list = products_list.filter(company=company)
 
         if not products_list:
-            products_list = Product.objects.all()
+            # products_list = Product.objects.all()
 
-        data = {
-            'products': products_list
-        }
+            return render(request, 'products/nothing_is_find.html')
 
-        return render(request, 'products/all_products.html', data)
+        return render(request, 'products/all_products.html', {'products': products_list})
 
     else:
-        # products = Product.objects.all()
         category_list = Category.objects.all()              # Если запрос GET, то:
         season_list = Season.objects.all()                  # функция извлекает все данные товара с ForeignKey из БД
         composition_list = ProductComposition.objects.all()
         size_scale_list = SizeScale.objects.all()
         company_list = Company.objects.all()
 
-        data = {
-            # 'products': products,                  # таким образом передали в шаблон 5 словарей:
+        data = {                                   # таким образом передали в шаблон 5 словарей:
             'categories': category_list,           # ДЛЯ УДОБСТВА заполнения этих полей в шаблоне - делаем их в виде
             'seasons': season_list,                # выпадающего списка - см. models.py !!!
             'compositions': composition_list,
             'size_scales': size_scale_list,
             'companies': company_list,
         }
-        return render(request, 'products/filter_left.html', data)
+        return render(request, 'products/all_products.html', data)

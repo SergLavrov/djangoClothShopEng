@@ -67,7 +67,7 @@
 
     <div class="content" style="padding-left: 10px; padding-right: 10px">
       <div class="row content">
-        <div class="col-sm-2" style="background-color: silver; height: 550px; position: sticky; top: 30px;">
+        <div class="col-sm-2" style="background-color: silver; height: 570px; position: sticky; top: 30px;">
 
           <h4 class="text-center">Filters</h4>
 
@@ -75,7 +75,7 @@
 
             {% csrf_token %}
 
-            <div style="padding-bottom: 20px">
+            <div style="padding-bottom: 25px">
               <label for="inputproductcategory" class="form-label fw-medium">Category</label>
               <select class="form-select" id="inputproductcategory" name="category_id">
                 <option selected disabled>select</option>
@@ -90,7 +90,7 @@
               </select>
             </div>
 
-            <div style="padding-bottom: 20px">
+            <div style="padding-bottom: 25px">
               <label for="inputseason" class="form-label fw-medium">Season</label>
               <select class="form-select" id="inputseason" name="season_id">
                 <option selected disabled>select</option>
@@ -102,7 +102,7 @@
               </select>
             </div>
 
-            <div style="padding-bottom: 20px">
+            <div style="padding-bottom: 25px">
               <label for="inputcomposition" class="form-label fw-medium">Product composition</label>
               <select class="form-select" id="inputcomposition" name="product_composition_id">
                 <option selected disabled>select</option>
@@ -114,7 +114,7 @@
               </select>
             </div>
 
-            <div style="padding-bottom: 20px">
+            <div style="padding-bottom: 25px">
               <label for="inputsizescale" class="form-label fw-medium">Size scale</label>
               <select class="form-select" id="inputsizescale" name="size_scale_id">
                 <option selected disabled>select</option>
@@ -126,7 +126,7 @@
               </select>
             </div>
 
-            <div class="form-group" style="padding-bottom: 20px">
+            <div class="form-group" style="padding-bottom: 30px">
               <label for="inputcompany" class="form-label fw-medium">Company</label>
               <select class="form-select" id="inputcompany" name="company_id">
                 <option selected disabled>select</option>
@@ -138,52 +138,12 @@
               </select>
             </div>
 
-            <div class="col-12" style="padding-bottom: 15px">
+            <div class="col-12 d-flex justify-content-between">
               <button type="submit" class="btn btn-outline-secondary">Search</button>
+              <a href="{% url 'get-products' %}" class="btn btn-outline-secondary">Reset filter</a>
               {# При нажатии на SUBMIT данные отправляются на СЕРВЕР командой POST:#}
             </div>
           </form>
-
-{#          <form>#}
-{#            <div class="form-group" style="padding-bottom: 20px; padding-top: 10px">#}
-{#            <label for="category">Category</label>#}
-{#            <select class="form-control" id="category">#}
-{#              <option></option>#}
-{#              <option>cloth</option>#}
-{#              <option>shoes</option>#}
-{#              <option>accessories</option>#}
-{#            </select>#}
-{#            </div>#}
-{##}
-{#            <div class="form-group" style="padding-bottom: 20px">#}
-{#            <label for="season">Season</label>#}
-{#            <select class="form-control" id="season">#}
-{#              <option></option>#}
-{#              <option>summer</option>#}
-{#              <option>winter</option>#}
-{#              <option>spring</option>#}
-{#              <option>autumn</option>#}
-{#              <option>demiseason</option>#}
-{#            </select>#}
-{#            </div>#}
-{##}
-{#            <div class="form-group" style="padding-bottom: 20px">#}
-{#            <label for="composition">Product composition</label>#}
-{#            <select class="form-control" id="composition">#}
-{#              <option></option>#}
-{#              <option>cotton</option>#}
-{#              <option>wool</option>#}
-{#              <option>polyester</option>#}
-{#              <option>leather</option>#}
-{#              <option>ecoleather</option>#}
-{#            </select>#}
-{#            </div>#}
-{##}
-{#            <div class="form-group">#}
-{#              <button type="submit" class="btn btn-outline-secondary">Search</button>#}
-{#              <button type="submit" value="search">Search</button>#}
-{#            </div>#}
-{#          </form>#}
         </div>
 
         <div class="col-sm-10">
@@ -219,52 +179,3 @@
     <hr>
 
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-  {# Кнопка скрывается, если пользователь не вошёл в систему #}
-  {#  {% if user.is_authenticated %}#}
-{#    {% if perms.products.add1 %}#}
-{#    <a class="btn btn-outline-success" href="{% url 'add-product' %}">Add product</a>#}
-{#    {% endif %}#}
-{#    <table class="table table-hover table-info table-striped-columns table-bordered border-black overflow-x-visible">#}
-{#      <thead class="fw-bold h4 text-center">#}
-{#      <tr>#}
-{#        <th>Name</th>#}
-{#        <th>Article</th>#}
-{#        <th class="d-none d-md-table-cell">Color</th>#}
-{#        <th class="d-none d-md-table-cell">Price</th>#}
-{#        <th class="d-none d-lg-table-cell">Quantity</th>#}
-{#        <th class="d-none d-lg-table-cell">Image</th>#}
-{#        <th></th>#}
-{#      </tr>#}
-{#      </thead>#}
-{#      <tbody class="align-middle text-center">#}
-{#      {% for product in products %}#}
-{#      <tr>#}
-{#        <td>{{ product.name_prod }}</td>#}
-{#        <td>{{ product.article }}</td>#}
-{#        <td class="d-none d-md-table-cell">{{ product.color }}</td>#}
-{#        <td class="d-none d-md-table-cell">{{ product.price }}</td>#}
-{#        <td class="d-none d-md-table-cell">{{ product.product_count }}</td>#}
-{#        <td>#}
-{#          <img src="{{ product.image.url }}" alt="image" height="50" width="100">#}
-{#        </td>#}
-{#        <td>#}
-{#          <a href="/product/get-product-by-id/{{ product.id }}/" class="btn btn-outline-primary">Details</a>#}
-{#        </td>#}
-{#      </tr>#}
-{#      {% endfor %}#}
-{#      </tbody>#}
-{#    </table>#}
-
-
-
