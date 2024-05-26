@@ -44,6 +44,6 @@ class Product(models.Model):
     # file = models.FileField('car_file/')  # можно прикрепить ещё файл (например doc, txt и т.д.)
     # image = models.ImageField(upload_to='/products_images', blank=True)          # (ФОТО товара)
 
-    # class Meta:
-    # ordering = ['id']
+    class Meta:
+        ordering = ['id']
     #     ordering = ['name']

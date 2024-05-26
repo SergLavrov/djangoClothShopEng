@@ -71,7 +71,8 @@
               CLOTH
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="{% url 'get-clothing' %}">Cloth</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-products-category' category_id=4 %}">Cloth</a></li>
+{#              <li><a class="dropdown-item" href="{% url 'get-clothing' %}">Cloth</a></li>#}
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="{% url 'get-pants' %}">Pants</a></li>
               <li><a class="dropdown-item" href="{% url 'get-jumpers' %}">Jumpers</a></li>
@@ -87,7 +88,8 @@
             SHOES
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'get-shoes' %}">Shoes</a></li>
+            <li><a class="dropdown-item" href="{% url 'get-products-category' category_id=5 %}">Shoes</a></li>
+{#            <li><a class="dropdown-item" href="{% url 'get-shoes' %}">Shoes</a></li>#}
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{% url 'get-boots' %}">Boots</a></li>
             <li><a class="dropdown-item" href="{% url 'get-sneakers' %}">Sneakers</a></li>
@@ -100,7 +102,8 @@
               ACCESSORIES
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="{% url 'get-accessories' %}">Accessories</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-products-category' category_id=6 %}">Accessories</a></li>
+{#              <li><a class="dropdown-item" href="{% url 'get-accessories' %}">Accessories</a></li>#}
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="{% url 'get-ties' %}">Ties</a></li>
               <li><a class="dropdown-item" href="{% url 'get-wallets' %}">Wallets</a></li>
@@ -134,7 +137,8 @@
 {#        <div>#}
 {#          {% if user.is_authenticated %}#}
 {#          <a href="{% url 'in-basket' %}">#}
-{#            <i class="fa fa-shopping-cart position-relative" aria-hidden="true" style="font-size: 30px; margin-left: 25px; color: black"></i>#}
+{#            <i class="fa fa-shopping-cart position-relative" aria-hidden="true" #}
+{#               style="font-size: 30px; margin-left: 25px; color: black"></i>#}
 {#          </a>#}
 {#          {% endif %}#}
 {#        </div>#}
@@ -164,16 +168,6 @@
 {#            </button>#}
 {#          {% endif %}#}
 {#        </div>#}
-
-
-{#        <button type="button" class="btn btn-outline-secondary position-relative">#}
-{#          <strong>Total price: {{ total_price }} BYN</strong>#}
-{#          <span class="position-absolute start-100 translate-middle badge rounded-pill bg-danger">#}
-{#            {{ item.quantity }}#}
-{#            <span class="visually-hidden">unread messages</span>#}
-{#          </span>#}
-{#        </button>#}
-
 
 
 <!-- При ВХОДЕ от "Компании" попадаем на список товаров в ВИДЕ ТАБЛИЦЫ !!! -->
@@ -352,107 +346,6 @@
      {% block content %}{% endblock %}
    </div>
 
-   <!-- Pagination -->
-
-{#   {% for product in page_obj %}#}
-{# Each "contact" is a Contact model object. #}
-{#     {{ product.image.url|upper }}<br>#}
-{#     {{ product.name_prod }}|upper }}<br>#}
-{#     {{ product.article }}|upper }}<br>#}
-{#     {{ product.price }}<br>#}
-{#     {{ product.description }}<br>#}
-{#   {% endfor %}#}
-{##}
-{#   <div class="pagination">#}
-{#    <span class="step-links">#}
-{#        {% if page_obj.has_previous %}#}
-{#          <a href="?page=1">&laquo; first</a>#}
-{#          <a href="?page={{ page_obj.previous_page_number }}">previous</a>#}
-{#        {% endif %}#}
-{##}
-{#      <span class="current">#}
-{#            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.#}
-{#        </span>#}
-{##}
-{#      {% if page_obj.has_next %}#}
-{#        <a href="?page={{ page_obj.next_page_number }}">next</a>#}
-{#        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>#}
-{#      {% endif %}#}
-{#    </span>#}
-{#   </div>#}
-
-
-{#   <nav class="list-pages">#}
-{#     <ul>#}
-{#       {% for p in paginator.page_range %}#}
-{#         {% if page_obj.number == p %}#}
-{#           <li class="page-num page-num-selected">{{ p }}</li>#}
-{#         {% else %}#}
-{#           <li class="page-num">#}
-{#             <a href="?page={{ p }}">{{ p }}</a>#}
-{#           </li>#}
-{#         {% endif %}#}
-{#       {% endfor %}#}
-{#     </ul>#}
-{#   </nav>#}
-
-{#   {% if is_paginated %}#}
-{#     <ul class="pagination">#}
-{#       {% if page_obj.has_previous %}#}
-{#         <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>#}
-{#       {% else %}#}
-{#         <li class="disabled"><span>&laquo;</span></li>#}
-{#       {% endif %}#}
-{#       {% for i in paginator.page_range %}#}
-{#         {% if page_obj.number == i %}#}
-{#           <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>#}
-{#         {% else %}#}
-{#           <li><a href="?page={{ i }}">{{ i }}</a></li>#}
-{#         {% endif %}#}
-{#       {% endfor %}#}
-{#       {% if page_obj.has_next %}#}
-{#         <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>#}
-{#       {% else %}#}
-{#         <li class="disabled"><span>&raquo;</span></li>#}
-{#       {% endif %}#}
-{#     </ul>#}
-{#   {% endif %}#}
-
-{#   {% if page_obj.has_other_pages %}#}
-{#     <nav aria-label="...">#}
-{#       <ul class="pagination">#}
-{##}
-{#         {% if page_obj.has_previous %}#}
-{#           <li class="page-item">#}
-{#             <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>#}
-{#           </li>#}
-{#         {% endif %}#}
-{##}
-{#         {% for p in page_obj.paginator.page_range %}#}
-{##}
-{#           {% if page_obj.number == p %}#}
-{#             <li class="page-item active" aria-current="page">#}
-{#               <a class="page-link" href="?page={{ p }}">{{ p }} <span class="sr-only"></span></a>#}
-{#             </li>#}
-{#           {% elif p > page_obj.number|add:-3 and p < page_obj.number|add:3 %}#}
-{#             <li class="page-item">#}
-{#               <a class="page-link" href="?page={{ p }}">{{ p }}</a>#}
-{#             </li>#}
-{#           {% endif %}#}
-{##}
-{#         {% endfor %}#}
-{##}
-{#         {% if page_obj.has_next %}#}
-{#           <li class="page-item">#}
-{#             <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>#}
-{#           </li>#}
-{#         {% endif %}#}
-{##}
-{#       </ul>#}
-{#     </nav>#}
-{#   {% endif %}#}
-
-
   <footer style="padding-top: 20px">
     <section class="footer">
       <div class="container">
@@ -493,6 +386,8 @@
                 <li><a href="{% url 'ticket-reviews' %}">Reviews</a></li>
                 <li><a href="{% url 'create-ticket' %}">Ask a question</a></li>
                 <li><a href="{% url 'ticket-list' %}">My feedback</a></li>
+                 <li></li>
+                <li style="font-size: 17px; padding-left: 110px">enjoy shopping ...</li>
               </ul>
             </div>
         </div>

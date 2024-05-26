@@ -59,6 +59,7 @@ def login_user(request: HttpRequest) -> HttpResponse:
                 raise ValidationError('Username or password is incorrect!')
             else:
                 login(request, user)
+                # messages.success(request, 'Login completed successfully!')
                 return HttpResponseRedirect(reverse('get-products'))
         except ValidationError as e:
             error = str(e)
