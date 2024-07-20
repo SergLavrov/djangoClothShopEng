@@ -1,7 +1,17 @@
 {% extends "products/layout.html" %}
 
+<!-- Total price in Navbar -->
+{#        <div>#}
+{#          {% if user.is_authenticated %}#}
+{#            <button type="button" class="btn btn-outline-secondary" style="margin-left: 20px">#}
+{#              <strong>Total: {{ total_price }} BYN</strong>#}
+{#            </button>#}
+{#          {% endif %}#}
+{#        </div>#}
+
+
 {% block headerbasket %}
-  {% if user.is_authenticated %}
+  {% if user.is_authenticated and request.user.is_staff == False %}
     <div class="basket">
       <a href="{% url 'in-basket' %}">
         <i class="fa fa-shopping-cart position-relative" style="font-size: 30px; margin-left: 25px; color: black">
@@ -12,8 +22,16 @@
         </i>
       </a>
     </div>
+
+    <div style="padding-left: 25px">
+      <button type="button" class="btn btn-outline-secondary">
+        <strong>Total: {{ total_price }} BYN</strong>
+      </button>
+    </div>
+
   {% endif %}
 {% endblock %}
+
 
 {% block content %}
     <style>
@@ -116,26 +134,26 @@
         <div class="col-sm-10">
           <div class="d-flex flex-row flex-wrap justify-content-flex-start row-gap-3 column-gap-3 px-4">
             {% for product in products %}
-                <div class="card" style="width: 14rem; border-image: 10 fill">
-                    <img src="{{ product.image.url }}" class="card-img" alt="image">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <h6 class="card-title">{{ product.name_prod }} - {{ product.article }}</h6>
-                            <h6 class="text-black-50">{{ product.price }} BYN</h6>
-                        </div>
-                        <p class="card-text">{{ product.description }}</p>
-                        <div class="d-flex justify-content-between">
-                            <a href="{% url 'product-details' product.id %}" class="btn btn-outline-secondary">Details</a>
-    {#                        <a href="{% url 'add-to-basket' product.id %}" class="btn btn-outline-secondary">Add to basket</a>#}
-    {#                        {% if user.is_authenticated %}#}
-                            <a href="{% url 'add-to-basket' product.id %}"><i class="fa fa-shopping-cart"></i></a>
-    {#                        {% endif %}#}
-                        </div>
-                    </div>
+              <div class="card" style="width: 14rem; border-image: 10 fill">
+                <img src="{{ product.image.url }}" class="card-img" alt="image">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                    <h6 class="card-title">{{ product.name_prod }} - {{ product.article }}</h6>
+                    <h6 class="text-black-50">{{ product.price }} BYN</h6>
+                  </div>
+                  <p class="card-text">{{ product.description }}</p>
+                  <div class="d-flex justify-content-between">
+                    <a href="{% url 'product-details' product.id %}" class="btn btn-outline-secondary">Details</a>
+                    {#                        <a href="{% url 'add-to-basket' product.id %}" class="btn btn-outline-secondary">Add to basket</a>#}
+                    {#                        {% if user.is_authenticated %}#}
+                    <a href="{% url 'add-to-basket' product.id %}"><i class="fa fa-shopping-cart"></i></a>
+                    {#                        {% endif %}#}
+                  </div>
                 </div>
-                <div>
-                    <a href="{% url 'product-details' product.id %}">{{ product.name }}</a>
-                </div>
+              </div>
+              <div>
+                <a href="{% url 'product-details' product.id %}">{{ product.name }}</a>
+              </div>
             {% endfor %}
           </div>
         </div>

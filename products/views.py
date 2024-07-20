@@ -6,14 +6,38 @@ from django.shortcuts import render
 from .models import Product, Company, Category, Season, ProductComposition, SizeScale
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required, permission_required
-# from django.views.generic import ListView
+from basket.models import Basket
+from django.contrib.auth.models import Group, User
+from django.db.models import Sum
+from django.views.generic import ListView
 
 # 1 Вариант
 # def get_products(request: HttpRequest) -> HttpResponse:
 #     products = Product.objects.filter(is_deleted=False)
 #     return render(request, 'products/all_products.html', {'products': products})
 
+
 # 2 Вариант - с учетом бокового меню "Filter"
+# def get_products(request: HttpRequest) -> HttpResponse:
+#     products = Product.objects.filter(is_deleted=False)
+#     category_list = Category.objects.all()                    # Если запрос GET, то:
+#     season_list = Season.objects.all()                        # функция извлекает ВСЕ данные товара с ForeignKey из БД
+#     composition_list = ProductComposition.objects.all()
+#     size_scale_list = SizeScale.objects.all()
+#     company_list = Company.objects.all()
+#
+#     data = {
+#         'products': products,
+#         'categories': category_list,      # таким образом передали в шаблон 5 словарей:
+#         'seasons': season_list,           # ДЛЯ УДОБСТВА заполнения этих полей в шаблоне - делаем их в виде
+#         'compositions': composition_list, # выпадающего списка - см. models.py !!!
+#         'size_scales': size_scale_list,
+#         'companies': company_list,
+#     }
+#     return render(request, 'products/all_products.html', data)
+
+#
+#  3 Вариант - с учетом бокового меню "Filter" + Сумма количества товаров в иконке "Корзина"
 def get_products(request: HttpRequest) -> HttpResponse:
     products = Product.objects.filter(is_deleted=False)
     category_list = Category.objects.all()                    # Если запрос GET, то:
@@ -22,27 +46,62 @@ def get_products(request: HttpRequest) -> HttpResponse:
     size_scale_list = SizeScale.objects.all()
     company_list = Company.objects.all()
 
-    data = {
-        'products': products,
-        'categories': category_list,      # таким образом передали в шаблон 5 словарей:
-        'seasons': season_list,           # ДЛЯ УДОБСТВА заполнения этих полей в шаблоне - делаем их в виде
-        'compositions': composition_list, # выпадающего списка - см. models.py !!!
-        'size_scales': size_scale_list,
-        'companies': company_list,
-    }
+    if request.user.is_authenticated:
+        basket_items = Basket.objects.filter(user=request.user)
+        total_quantity = basket_items.aggregate(Sum('quantity'))
+        total_price = sum(item.product.price * item.quantity for item in basket_items)
+
+        data = {
+            'products': products,
+            'categories': category_list,      # таким образом передали в шаблон 5 словарей:
+            'seasons': season_list,           # ДЛЯ УДОБСТВА заполнения этих полей в шаблоне - делаем их в виде
+            'compositions': composition_list, # выпадающего списка - см. models.py !!!
+            'size_scales': size_scale_list,
+            'companies': company_list,
+            'total_quantity': total_quantity.get('quantity__sum'),
+            'total_price': total_price
+        }
+
+    else:           # при выходе из своего аккаунта !!! - мы НЕ должны передавать в шаблон количество товаров в корзине
+        data = {
+            'products': products,
+            'categories': category_list,
+            'seasons': season_list,
+            'compositions': composition_list,
+            'size_scales': size_scale_list,
+            'companies': company_list,
+        }
     return render(request, 'products/all_products.html', data)
 
 
 # <!-- Pagination -->
-# class ProductListView(ListView):
-#     paginate_by = 10
-#     model = Product
-# #     # queryset = Product.objects.filter(is_deleted=False)
-#     template_name = 'products/layout.html'
-#     context_object_name = 'products'
+class ProductListView(ListView):
+    model = Product
+    template_name = 'products/all_products.html'
+    context_object_name = 'products'
+    paginate_by = 12
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        context['seasons'] = Season.objects.all()
+        context['compositions'] = ProductComposition.objects.all()
+        context['size_scales'] = SizeScale.objects.all()
+        context['companies'] = Company.objects.all()
+        return context
+
+
+    def get_queryset(self):
+        return Product.objects.filter(is_deleted=False)
+
+# def listing(request):
+#     product_list = Product.objects.filter(is_deleted=False)
+#     paginator = Paginator(product_list, 12)
 #
-#     # def get_queryset(self):
-#     #     return Product.objects.filter(is_deleted=False)
+#     page_number = request.GET.get('page')
+#     page_obj = paginator.get_page(page_number)
+#     return render(request, 'products/all_products.html', {'page_obj': page_obj})
+
 
 
 def get_products_list(request: HttpRequest) -> HttpResponse:
@@ -81,10 +140,10 @@ def get_products_category(request, category_id):
 #     return render(request, 'products/all_products.html', {'products': products})
 
 
-def get_by_name_product(request, name_prod):
-    products = Product.objects.filter(name_prod=name_prod).filter(is_deleted=False)
-
-    return render(request, 'products/all_products.html', {'products': products})
+# def get_by_name_product(request, name_prod):
+#     products = Product.objects.filter(name_prod=name_prod).filter(is_deleted=False)
+#
+#     return render(request, 'products/all_products.html', {'products': products})
 
 
 def get_pants(request):
@@ -167,13 +226,39 @@ def get_scavers(request):
     return render(request, 'products/all_products.html', {'products': products})
 
 
+# 1 Вариант
+# def product_details(request, product_id):
+#     size_scale_list = SizeScale.objects.all()
+#     product = Product.objects.get(id=product_id)
+#     data = {
+#         'size_scales': size_scale_list,
+#         'product': product
+#     }
+#     return render(request, 'products/product_details.html', data)
+
+
+# 2 Вариант - с учетом Cуммы количества товаров в иконке "Корзина"
 def product_details(request, product_id):
     size_scale_list = SizeScale.objects.all()
     product = Product.objects.get(id=product_id)
-    data = {
-        'size_scales': size_scale_list,
-        'product': product
-    }
+
+    if request.user.is_authenticated:
+        basket_items = Basket.objects.filter(user=request.user)
+        total_quantity = basket_items.aggregate(Sum('quantity'))
+        total_price = sum(item.product.price * item.quantity for item in basket_items)
+
+        data = {
+            'size_scales': size_scale_list,
+            'product': product,
+            'total_quantity': total_quantity.get('quantity__sum'),
+            'total_price': total_price
+        }
+
+    else:          # Если мы НЕ авторизованы !!! - мы НЕ должны передавать в шаблон количество товаров в корзине и цены!
+        data = {
+            'size_scales': size_scale_list,
+            'product': product
+        }
     return render(request, 'products/product_details.html', data)
 
 

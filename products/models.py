@@ -47,3 +47,4 @@ class Product(models.Model):
     class Meta:
         ordering = ['id']
     #     ordering = ['name']
+

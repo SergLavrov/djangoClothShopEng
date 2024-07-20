@@ -1,5 +1,28 @@
 {% extends "products/layout.html" %}
 
+{% block headerbasket %}
+  {% if user.is_authenticated and request.user.is_staff == False %}
+    <div class="basket">
+      <a href="{% url 'in-basket' %}">
+        <i class="fa fa-shopping-cart position-relative" style="font-size: 30px; margin-left: 25px; color: black">
+            <span class="position-absolute start-100 translate-middle badge rounded-pill bg-secondary"
+                  style="font-size: 11px">
+              {{ total_quantity }}
+            </span>
+        </i>
+      </a>
+    </div>
+
+    <div style="padding-left: 25px">
+      <button type="button" class="btn btn-outline-secondary">
+        <strong>Total: {{ total_price }} BYN</strong>
+      </button>
+    </div>
+
+  {% endif %}
+{% endblock %}
+
+
 {% block content %}
 
     <hr>
