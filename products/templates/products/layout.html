@@ -351,17 +351,14 @@
      {% endif %}
 
    <!--Блок контента -->
-
      {% block content %}
      {% endblock %}
-
-      {% include 'products/pagination.html' %}
-{#     {% block pagination %}#}
-{#     {% endblock %}#}
+    <!--Пагинация -->
+     {% include 'products/pagination.html' %}
 
    </div>
 
-  <footer style="padding-top: 40px">
+  <footer style="padding-top: 20px">
     <section class="footer">
       <div class="container">
         <div class="row">

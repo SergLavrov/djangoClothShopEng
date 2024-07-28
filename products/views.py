@@ -79,7 +79,7 @@ class ProductListView(ListView):
     model = Product
     template_name = 'products/all_products.html'
     context_object_name = 'products'
-    paginate_by = 12
+    paginate_by = 8
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -90,17 +90,9 @@ class ProductListView(ListView):
         context['companies'] = Company.objects.all()
         return context
 
-
+# Для того чтобы не показывать удаленные продукты !
     def get_queryset(self):
         return Product.objects.filter(is_deleted=False)
-
-# def listing(request):
-#     product_list = Product.objects.filter(is_deleted=False)
-#     paginator = Paginator(product_list, 12)
-#
-#     page_number = request.GET.get('page')
-#     page_obj = paginator.get_page(page_number)
-#     return render(request, 'products/all_products.html', {'page_obj': page_obj})
 
 
 
@@ -123,6 +115,22 @@ def get_products_category(request, category_id):
     }
     return render(request, 'products/all_products.html', data)
     # return render(request, 'products/all_products.html', {'products': products})
+
+
+# Фильтрация продуктов "по категориям" с учетом пагинации !
+class ProductCategoryListView(ListView):
+    model = Product
+    template_name = 'products/all_products.html'
+    context_object_name = 'products'
+    paginate_by = 8
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
+
+    def get_queryset(self):
+        return Product.objects.filter(category__id=self.kwargs['category_id']).filter(is_deleted=False)
 
 
 # def get_clothing(request):
