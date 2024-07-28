@@ -1,0 +1,146 @@
+{% extends "products/layout.html" %}
+
+{% block content %}
+
+  <div class="row col-12 offset-lg-2 col-lg-8">
+
+    <h3 class="pt-5" style="text-align: center; color: dimgrey; padding-bottom: 15px">Product - article
+      № {{ product.article }}</h3>
+
+    {% if error %}
+      <div class="alert alert-danger" role="alert">
+        {{ error }}
+      </div>
+    {% endif %}
+
+    <form method="POST" class="row" enctype="multipart/form-data">
+
+      {% csrf_token %}
+
+      <div class="col-12 col-lg-6 pb-3">
+        <label for="inputnameproduct" class="form-label fw-medium">Name product</label>
+        <input type="text" value="{{ product.name_prod }}" name="name_prod" class="form-control" id="inputnameproduct">
+      </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+        <label for="inputarticle" class="form-label fw-medium">Article</label>
+        <input type="text" value="{{ product.article }}" name="article" class="form-control" id="inputarticle">
+      </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+        <label for="inputproductcategory" class="form-label fw-medium">Category</label>
+        <select class="form-select" id="inputproductcategory" name="category_id">
+
+          {% for category in categories %}
+
+            {% if category.id == product.category.id %}
+              <option value="{{ category.id }}" selected>{{ category.name_category }}</option>
+            {% else %}
+              <option value="{{ category.id }}">{{ category.name_category }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+        <label for="inputseason" class="form-label fw-medium">Season</label>
+        <select class="form-select" id="inputseason" name="season_id">
+
+          {% for season in seasons %}
+
+            {% if season.id == product.season.id %}
+              <option value="{{ season.id }}" selected>{{ season.name_season }}</option>
+            {% else %}
+              <option value="{{ season.id }}">{{ season.name_season }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+        <label for="inputcomposition" class="form-label fw-medium">Product composition</label>
+        <select class="form-select" id="inputcomposition" name="product_composition_id">
+
+          {% for product_composition in compositions %}
+
+            {% if product_composition.id == product.product_composition.id %}
+              <option value="{{ product_composition.id }}"
+                      selected>{{ product_composition.product_composition }}</option>
+            {% else %}
+            <option value="{{ product_composition.id }}" selected>{{ product_composition.product_composition }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+        <label for="inputcompany" class="form-label fw-medium">Company</label>
+        <select class="form-select" id="inputcompany" name="company_id">
+
+          {% for company in companies %}
+
+            {% if company.id == product.company.id %}
+              <option value="{{ company.id }}" selected>{{ company.name_company }}</option>
+            {% else %}
+              <option value="{{ company.id }}">{{ company.name_company }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+        <label for="inputcolor" class="form-label fw-medium">Color</label>
+        <input type="text" value="{{ product.color }}" name="color" class="form-control" id="inputcolor">
+      </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+        <label for="inputprice" class="form-label fw-medium">Price</label>
+        <input type="number" value="{{ product.price }}" name="price" class="form-control" id="inputprice">
+      </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+        <label for="inputproductcount" class="form-label fw-medium">Quantity</label>
+        <input type="number" value="{{ product.product_count }}" name="product_count" class="form-control"
+               id="inputproductcount">
+      </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+        <label for="inputsizescale" class="form-label fw-medium nav-link active col">Size scale</label>
+        <select class="form-select" id="inputsizescale" name="size_scale_id">
+
+          {% for size_scale in size_scales %}
+
+            {% if size_scale.id == product.size_scale.id %}
+              <option value="{{ size_scale.id }}" selected>{{ size_scale.size_scale }}</option>
+            {% else %}
+              <option value="{{ size_scale.id }}">{{ size_scale.size_scale }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-12 pb-3">
+        <label for="inputdescription" class="form-label fw-medium">Description</label>
+        <input type="text" value="{{ product.description }}" name="description" class="form-control"
+               id="inputdescription">
+      </div>
+
+      <div class="col-12 pb-3">
+        <label for="image" class="form-label fw-medium">Image</label>
+        <input type="file" value="{{ product.image }}" name="image" class="form-control-file" id="image"
+               placeholder="Upload photo">
+      </div>
+
+      <div class="col-12">
+        {#        <a class="btn btn-secondary" href="{% url 'update-product' product_id=product.id %}">Update</a>#}
+        <button type="submit" class="btn btn-secondary">Update</button>
+        {#               При нажатии на SUBMIT измененные данные отправляются на СЕРВЕР командой:#}
+        {#                        см выше:<form method="POST" action="{% url 'update-product' product_id=product.id %}">#}
+
+        <a class="btn btn-secondary" href="{% url 'delete-product' product_id=product.id %}">Delete</a>
+        <a href="{% url 'get-products-list' %}" class="btn btn-outline-secondary">Back</a>
+      </div>
+    </form>
+  </div>
+
+{% endblock %}

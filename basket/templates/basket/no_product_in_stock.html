@@ -1,0 +1,13 @@
+{% extends "products/layout.html" %}
+
+{% block content %}
+
+    <p class="text-center" style="font-size: 24px; color: darkslateblue; padding-bottom: 40px; padding-top: 60px">
+      Not enough products in stock !
+    </p>
+
+    <a href="{% url 'in-basket'%}" class="btn btn-secondary" style="margin-bottom: 25px;
+    position: relative; left: 45%">To basket</a>
+
+
+{% endblock %}

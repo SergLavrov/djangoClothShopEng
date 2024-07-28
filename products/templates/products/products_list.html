@@ -1,0 +1,58 @@
+{% extends "products/layout.html" %}
+
+{% block content %}
+
+  <style>
+      th, td {
+              width: 10%;
+          }
+  </style>
+
+{# Кнопка скрывается, если пользователь не вошёл в систему #}
+{#  {% if user.is_authenticated %}#}
+
+    {% if perms.products.add1 %}
+    <a class="btn btn-outline-secondary" href="{% url 'add-product' %}">Add product</a>
+    {% endif %}
+
+    <table class="table table-hover table-striped-columns table-bordered border-black overflow-x-visible">
+
+      <thead class="fw-bold h5 text-center">
+      <tr>
+        <th>Company</th>
+        <th>Name</th>
+        <th class="d-none d-md-table-cell">Article</th>
+        <th class="d-none d-md-table-cell">Price</th>
+        <th class="d-none d-lg-table-cell">Is deleted</th>
+        <th class="d-none d-lg-table-cell">Image</th>
+        <th class="d-none d-lg-table-cell" style="font-size: 17px">Update/Delete</th>
+      </tr>
+      </thead>
+
+      <tbody class="align-middle text-center">
+      {% for product in products %}
+      <tr>
+        <td>{{ product.company.name_company }}</td>
+        <td>{{ product.name_prod }}</td>
+        <td class="d-none d-md-table-cell">{{ product.article }}</td>
+        <td class="d-none d-md-table-cell">{{ product.price }}</td>
+        <td class="d-none d-md-table-cell">
+          {% if product.is_deleted %}
+            <b>Yes</b>
+          {% else %}
+            No
+          {% endif %}
+        </td>
+        <td>
+          <img src="{{ product.image.url }}" alt="image" height="50" width="80">
+        </td>
+        <td>
+          <a href="/product/get-product-by-id/{{ product.id }}/" class="btn btn-outline-secondary">Details</a>
+        </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+
+    </table>
+
+{% endblock %}

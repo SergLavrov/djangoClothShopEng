@@ -1,0 +1,124 @@
+{% extends "products/layout.html" %}
+
+{% block content %}
+
+  <!-- With using try / except -->
+
+  <style>
+    .alert_message {
+        text-align: center;
+        font-family: inherit;
+        color: red;
+    }
+  </style>
+
+  <div class="row col-12 offset-lg-2 col-lg-8" style="margin-bottom: 25px">
+
+    <h4 class="pt-5" style="text-align: center">Checkout</h4>
+
+    <div class="alert alert-lightgrey" role="alert">
+      <div class="alert_message">
+        {{ error }}
+      </div>
+
+      <form method="POST" class="row" enctype="multipart/form-data" action="{% url 'create-order' %}">
+
+        {% csrf_token %}
+
+        <div class="col-12 col-lg-6 pb-3">
+          <label for="inputname" class="form-label fw-medium">First name</label>
+          <input type="text" name="first_name" class="form-control" id="inputname" placeholder="Enter your name">
+        </div>
+
+        <div class="col-12 col-lg-6 pb-3">
+          <label for="inputlastname" class="form-label fw-medium">Last name</label>
+          <input type="text" name="last_name" class="form-control" id="inputlastname"
+                 placeholder="Enter your last name">
+        </div>
+
+        <div class="col-12 col-lg-6 pb-3">
+          <label for="inputphone" class="form-label fw-medium">Phone</label>
+          <input type="text" name="phone" class="form-control" id="inputphone" placeholder="Enter your phone">
+        </div>
+
+        <div class="col-12 col-lg-6 pb-3">
+          <label for="inputemail" class="form-label fw-medium">Email</label>
+          <input type="text" name="email" class="form-control" id="inputemail" placeholder="Enter email">
+        </div>
+
+        <div class="col-12 col-lg-6 pb-3">
+          <label for="inputcity" class="form-label fw-medium">City</label>
+          <input type="text" name="city" class="form-control" id="inputcity" placeholder="Enter city">
+        </div>
+
+        <div class="col-12 col-lg-6 pb-3">
+          <label for="inputaddress" class="form-label fw-medium">Address</label>
+          <input type="text" name="address" class="form-control" id="inputaddress"
+                 placeholder="Enter the street, house and apartment number">
+        </div>
+
+        <div class="col-12 col-lg-6 pb-3">
+          <label for="inputpostcode" class="form-label fw-medium">Postcode</label>
+          <input type="number" name="postcode" class="form-control" id="inputpostcode" placeholder="Enter the postcode">
+        </div>
+
+
+        <div class="col-12 col-lg-6 pb-3">
+          <label for="inputdelivery" class="form-label fw-medium">Delivery method</label>
+          <select class="form-select" id="inputdelivery" name="delivery_id">
+            <option selected disabled>Select delivery method</option>
+
+            {% for delivery in delivery_list %}
+
+              <option value="{{ delivery.id }}">{{ delivery.delivery_type }}</option>
+              {#Тег <option> определяет опцию - "Выберите из ВЫПАДАЮЩЕГО списка". <option> помещаются внутрь <select> #}
+              {#Тег можно использовать без каких-либо атрибутов, но Обычно требуется атрибут value, который указывает, #}
+              {#что отправляется на сервер при отправке формы.#}
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-12 col-lg-6 pb-3">
+          <label for="inputpayment" class="form-label fw-medium">Payment method</label>
+          <select class="form-select" id="inputpayment" name="payment_id">
+            <option selected disabled>Select payment method</option>
+
+            {% for payment in payment_list %}
+
+              <option value="{{ payment.id }}">{{ payment.payment_type }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-12" style="padding-top: 15px">
+          <a href="{% url 'in-basket' %}" class="btn btn-outline-secondary">Back</a>
+          <button type="submit" class="btn btn-secondary">Place order</button>
+          {#                          При нажатии на SUBMIT данные отправляются на СЕРВЕР командой:#}
+          {#                          см выше:<form method="POST" class="row" action="{% url 'create-order' %}">#}
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}
+
+
+
+{#{% block title %}#}
+{##}
+{#    <div class="order-info">#}
+{#        <h3>Your order</h3>#}
+{#        <ul>#}
+{#            {% for item in order %}#}
+{#                <li>#}
+{#                  {{ item.product.name_prod }} ({{ item.quantity }} item)#}
+{#                  Price: <strong>{{ item.product.price }} BYN</strong>#}
+{#                    {{ item.quantity }} x {{ item.product.price }}#}
+{#                    <span>{{ item.total_price }} BYN</span>#}
+{#                </li>#}
+{#            {% endfor %}#}
+{#        </ul>#}
+{#        <p>Total price: {{ total_price }} BYN</p>#}
+{#    </div>#}
+{##}
+{#{% endblock %}#}

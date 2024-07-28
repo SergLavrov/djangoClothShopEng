@@ -1,0 +1,118 @@
+{#<!-- В шаблоне layout.html вставили после "Блок контента" через {% include 'products/pagination.html' %} -->#}
+
+{#Для Варианта 3#}
+<style>
+  {#Центрирование пагинации#}
+  .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+  }
+
+  .pagination a {
+      {#text-align: center;#}
+      font-size: 17px;
+      {#border: 1px solid #666;#}
+      color: black;
+      text-decoration: none;
+      padding: 5px 10px;
+      margin: 0 4px;
+      {#border-radius: 5px;#}
+      {#background-color: white;#}
+      {#transition: .4s;#}
+  }
+
+  {#Стили для активной кнопки-страницы#}
+  .page-num-selected {
+      {#background-color: white;#}
+      border: 1px solid #666;
+      color: black;
+      padding: 5px 10px;
+      margin: 0 4px;
+      border-radius: 5px;
+  }
+
+  .pagination a:hover {
+      {#background-color: #343434;#}
+      color: black;
+      border: 1px solid #666;
+      padding: 5px 10px;
+      margin: 0 4px;
+      border-radius: 5px;
+      {#transition: .4s;#}
+  }
+
+</style>
+
+{#3 Вариант#}
+
+{% if page_obj.has_other_pages %} {#Проверка - пагинация будет выводится в том случае, если есть другие страницы?#}
+  <div class="pagination">
+
+    {% if page_obj.has_previous %}
+      <a href="?page=1">first</a>
+      <a href="?page={{ page_obj.previous_page_number }}">&lt;</a> {#&lt; - Угловая скобка слева#}
+    {% endif %}
+
+    {% for page_number in paginator.page_range %}
+      {% if page_obj.number == page_number %}   {#Если активная страница#}
+        <li class="page-num page-num-selected">
+          {{ page_number }}
+        </li>
+      {% elif page_number >= page_obj.number|add:-2 and page_number <= page_obj.number|add:2 %}
+        {#Для того, чтобы не отражать ВСЕ страницы - будем отображать только по 2 стр. слева и справа от активной!!!#}
+
+        <li class="page-num">
+          <a href="?page={{ page_number }}">{{ page_number }}</a>
+        </li>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}">&gt;</a> {#&gt; - Угловая скобка справа#}
+      <a href="?page={{ page_obj.paginator.num_pages }}">last</a>
+    {% endif %}
+
+  </div>
+{% endif %}
+
+
+{#1 Вариант#}
+
+{#{% if is_paginated %}#}
+{#  <div class="pagination">#}
+{#    {% for page_number in page_obj.paginator.get_elided_page_range %}#}
+{#      {% if page_number == page_obj.paginator.ELLIPSIS %}#}
+{#           {{page_number}}#}
+{#      {% else %}#}
+{#          <a href="?page={{ page_number }}" class="{% if page_number == page_obj.number %}current{% endif %}">#}
+{#              {{page_number}}#}
+{#          </a>#}
+{#      {% endif %}#}
+{#    {% endfor %}#}
+{#  </div>#}
+{#{% endif %}#}
+
+
+{#2 Вариант полностью с "Django Documentation" #}
+
+{#{% if page_obj.has_other_pages %} {#Проверка - пагинация будет выводится в том случае, если есть другие страницы?#}
+{#  <div class="pagination">#}
+{#      <span class="step-links">#}
+{#          {% if page_obj.has_previous %}#}
+{#              <a href="?page=1">&laquo; first</a>#}
+{#              <a href="?page={{ page_obj.previous_page_number }}">previous</a>#}
+{#          {% endif %}#}
+{##}
+{#          <span class="current">#}
+{#              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.#}
+{#          </span>#}
+{##}
+{#          {% if page_obj.has_next %}#}
+{#              <a href="?page={{ page_obj.next_page_number }}">next</a>#}
+{#              <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>#}
+{#          {% endif %}#}
+{#      </span>#}
+{#  </div>#}
+{#{% endif %}#}

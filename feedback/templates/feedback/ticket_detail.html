@@ -1,0 +1,42 @@
+{% extends "products/layout.html" %}
+
+{% block content %}
+
+    <div class="row">
+{#        <div class="col-10 mb-0">#}
+{#            <div class="row">#}
+{#                <div class="col-2">#}
+{#                    <a href="{% url 'ticket-list' %}"></a>#}
+{#                </div>#}
+{#                <div class="col-10">#}
+{#                  <h4 class="text-center" style="padding-top: 10px; font-size: 20px">Detailed information</h4>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+        <div class="col-6">
+            <div style="padding-top: 25px">
+                <div>Title:</div>
+                <h4 style="padding-top: 10px; font-size: 17px">{{ ticket.title }}</h4>
+                <br/>
+                <label for="desc">Description:</label> <br/>
+                <textarea id="desc" rows="3" class="form-control" disabled>{{ ticket.description }}</textarea>
+            </div>
+        </div>
+        <div class="col-1"></div>
+        <div class="col-3">
+            <div style="padding-top: 50px">
+                <p>Creation date: {{ ticket.created_at }}</p>
+                <p>User: {{ ticket.user.username }}</p>
+                <p>Status: {{ ticket.status.name }}</p>
+                <p>Category: {{ ticket.category.name }}</p>
+            </div>
+        </div>
+        <div class="col-12" style="padding-top: 10px">
+          <a href="{% url 'ticket-list' %}" class="btn btn-outline-secondary">Back</a>
+{#          {% if user.is_authenticated %}#}
+{#            <a href="{% url 'delete-ticket' ticket.id %}" class="btn btn-outline-secondary">Delete</a>#}
+{#          {% endif %}#}
+      </div>
+    </div>
+
+{% endblock %}

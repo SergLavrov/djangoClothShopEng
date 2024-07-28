@@ -1,0 +1,46 @@
+{% extends "products/layout.html" %}
+
+{% block content %}
+  <style> style
+  table {
+      table-layout: fixed;
+      width: 100%;
+  }
+  td, th {
+      width: 20%;
+  }
+  {#tr {#}
+  {#    /* Теперь все строки имеют высоту 50 пикселей. */#}
+  {#    height: 25px;#}
+  {#}#}
+  </style>
+
+    <h4 class="text-center" style="padding-top: 20px; font-family: cursive; font-size: 22px">Feedback</h4>
+    <a class="btn btn-outline-secondary" href="{% url 'create-ticket' %}">Add ticket</a>
+    <table class="table table-hover table-striped-columns table-bordered border-black overflow-x-visible">
+        <thead>
+        <tr style="text-align: center">
+            <th>Name</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for ticket in tickets %}
+            <tr style="text-align: center; height: 20px">
+                <td>{{ ticket.title }}</td>
+                <td>{{ ticket.category.name }}</td>
+                <td>{{ ticket.created_at }}</td>
+                <td>{{ ticket.status.name }}</td>
+                <td>
+                    <a href="{% url 'ticket-detail' ticket.id %}" class="btn btn-outline-secondary">Details</a>
+                    <a href="{% url 'delete-ticket' ticket.id %}" class="btn btn-outline-secondary">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

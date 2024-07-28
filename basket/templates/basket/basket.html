@@ -1,0 +1,81 @@
+{% extends "products/layout.html" %}
+
+
+{% block headerbasket %}
+  {% if user.is_authenticated and request.user.is_staff == False %}
+    <div class="basket">
+      <a href="{% url 'in-basket' %}">
+        <i class="fa fa-shopping-cart position-relative" style="font-size: 30px; margin-left: 25px; color: black">
+            <span class="position-absolute start-100 translate-middle badge rounded-pill bg-secondary"
+                  style="font-size: 11px">
+              {{ total_quantity }}
+            </span>
+        </i>
+      </a>
+    </div>
+
+    <div style="padding-left: 25px">
+      <button type="button" class="btn btn-outline-secondary">
+        <strong>Total: {{ total_price }} BYN</strong>
+      </button>
+    </div>
+
+  {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+  <style>
+        /* Add CSS styles for flex container and items */
+        .product-list {
+            display: flex;
+            flex-wrap: wrap; /* Allow items to wrap to the next row if necessary */
+            {#justify-content: space-between; /* Space items evenly along the main axis */#}
+            {#list-style: none; /* Remove list styles */#}
+            padding: 0;
+        }
+
+        .product-item {
+            {#flex: 1; /* Grow to fill available space evenly */#}
+             /* Limit item width to avoid overcrowding */
+            margin: 10px; /* Add spacing between items */
+            border: 1px solid darkslateblue; /* Add a border for visual separation */
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+
+  <h4>Your basket: <span style="font-size: 20px">{{ total_quantity }} items</span></h4>
+
+  <div class="product-list">
+
+    {% for item in basket_items %}
+      <div class="product-item">
+
+        <img src="{{ item.product.image.url }}" alt="image" height="65" width="80">
+
+        <p>{{ item.product.name_prod }} ({{ item.quantity }} item)</p>
+        <p>Size: {{ item.product.size_scale.size_scale }}</p>
+        <p>Price: <strong>{{ item.product.price }} BYN</strong></p>
+
+        <a style="color: dimgrey; font-size: 18px;" href="{% url 'delete-from-basket' item.id %}">
+          <!-- Icon of Delete from Basket -->
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        </a>
+
+      </div>
+    {% empty %}
+      <p style="color: darkslateblue; padding-top: 15px; font-size: 17px"><strong>Your basket is empty. Select product !</strong></p>
+    {% endfor %}
+
+  </div>
+
+  <p style="padding-top: 10px; padding-bottom: 10px; font-size: 17px"><strong>Total price: {{ total_price }} BYN</strong></p>
+
+  <div style="padding-bottom: 15px">
+    <a href="{% url 'get-products' %}" class="btn btn-outline-secondary">Continue shopping</a>
+    <a href="{% url 'create-order' %}" class="btn btn-outline-secondary">Checkout</a>
+  </div>
+
+{% endblock %}

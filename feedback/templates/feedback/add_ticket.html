@@ -1,0 +1,63 @@
+{% extends "products/layout.html" %}
+
+{% block content %}
+
+{#  <style>#}
+{#    .alert_message {#}
+{#        text-align: center;#}
+{#        font-family: inherit;#}
+{#        color: red;#}
+{#    }#}
+{#  </style>#}
+
+  <div class="row col-12 offset-lg-2 col-lg-8">
+
+    <h4 class="pt-5" style="text-align: center; padding-bottom: 10px">Add ticket:</h4>
+
+    <div class="alert alert-lightgrey" role="alert">
+      <div class="alert_message" class="alert_message" style="text-align: center; color: darkslateblue">
+          {{ error }}
+      </div>
+
+      <form method="POST" class="row" enctype="multipart/form-data" action="{% url 'create-ticket' %}">
+
+        {% csrf_token %}
+
+        <div class="col-12 col-lg-6 pb-3">
+            <label for="inputtitle" class="form-label fw-medium">Title</label>
+            <input type="text" name="title" class="form-control" id="inputtitle" placeholder="Enter title">
+        </div>
+
+        <div class="col-12 col-lg-6 pb-3">
+          <label for="inputcategory" class="form-label fw-medium">Category</label>
+          <select class="form-select" id="inputcategory" name="category_id">
+            <option selected disabled>Select category</option>
+
+            {% for category in categories %}
+
+            <option value="{{ category.id }}">{{ category.name }}</option>
+          {#Тег <option> определяет опцию - "Выберите из ВЫПАДАЮЩЕГО списка". <option> помещаются внутрь <select> #}
+          {#Тег можно использовать без каких-либо атрибутов, но Обычно требуется атрибут value, который указывает, #}
+          {#что отправляется на сервер при отправке формы.#}
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-12">
+          <label for="inputdescription" class="form-label fw-medium">Description</label>
+          <textarea type="text" name="description" class="form-control" id="inputdescription"
+                    placeholder="Enter description"></textarea>
+        </div>
+
+
+        <div class="col-12" style="padding-top: 15px">
+          <a href="{% url 'ticket-list' %}" class="btn btn-outline-secondary">Back</a>
+          <button type="submit" class="btn btn-secondary">Save</button>
+  {#                                      При нажатии на SUBMIT данные отправляются на СЕРВЕР командой:#}
+  {#                                      см выше:<form method="POST"#}
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends "products/layout.html" %}
+
+{% block headerbasket %}
+
+{% endblock %}
+
+{% block content %}
+
+  <style>
+      {#th, td {#}
+      {#        width: 10%;#}
+      {#    }#}
+      {#.btn {          {# Уменьшили размер кнопки Execute и выравнили текст по центру кнопки#}
+      {#    width: 60px;#}
+      {#    height: 20px;#}
+      {#    line-height: 0.20em;#}
+
+      .form-check-input {
+          border-color: black;
+      }
+  </style>
+{#    {% if perms.basket.see3 %}#}
+{#    <a class="btn btn-outline-secondary" href="{% url 'is-processed' order_id=order.id %}">Process order</a>#}
+{#    {% endif %}#}
+
+    <h5 class="pt-2" style="text-align: left">Order list:</h5>
+    <table class="table table-hover table table-striped table-bordered border-black">
+
+      <thead class="fw-bold h4 text-center">
+      <tr style="font-size: 14px">
+        <th>№</th>
+        <th>name</th>
+        <th class="d-none d-lg-table-cell">last name</th>
+        <th class="d-none d-lg-table-cell">phone</th>
+        <th class="d-none d-lg-table-cell">email</th>
+        <th class="d-none d-lg-table-cell">city</th>
+        <th class="d-none d-lg-table-cell">address</th>
+        <th class="d-none d-lg-table-cell">postcode</th>
+        <th class="d-none d-lg-table-cell">delivery</th>
+        <th class="d-none d-lg-table-cell">payment</th>
+        <th class="d-none d-lg-table-cell">created</th>
+{#        <th class="d-none d-lg-table-cell">total price, BYN</th>#}
+{#        <th class="d-none d-lg-table-cell">quantity</th>#}
+        <th class="d-none d-lg-table-cell">processed</th>
+        <th class="d-none d-lg-table-cell">Сhoose</th>
+        <th class="d-none d-lg-table-cell">Delete</th>
+      </tr>
+      </thead>
+
+      <tbody class="align-middle text-center" style="vertical-align: text-top; height: 10px;">
+      {% for order in orders %}
+        <tr style="font-size: 12px;">
+          <td>{{ order.id }}</td>
+          <td>{{ order.first_name }}</td>
+          <td>{{ order.last_name }}</td>
+          <td class="d-none d-lg-table-cell">{{ order.phone }}</td>
+          <td class="d-none d-lg-table-cell">{{ order.email }}</td>
+          <td class="d-none d-lg-table-cell">{{ order.city }}</td>
+          <td class="d-none d-lg-table-cell">{{ order.address }}</td>
+          <td class="d-none d-lg-table-cell">{{ order.postcode }}</td>
+          <td class="d-none d-lg-table-cell">{{ order.delivery.delivery_type }}</td>
+          <td class="d-none d-lg-table-cell">{{ order.payment.payment_type }}</td>
+          <td class="d-none d-lg-table-cell">{{ order.created_at }}</td>
+{#          <td class="d-none d-lg-table-cell">{{ total_price }}</td>#}
+{#          <td class="num">{{ item.quantity }} </td>#}
+
+          <td class="d-none d-lg-table-cell">
+              {% if order.is_processed %}
+                  <b>Yes</b>
+              {% else %}
+                  No
+              {% endif %}
+          </td>
+          <td class="d-none d-lg-table-cell">
+            <div class="col-12 pb-2">
+              <form method="post" action="{% url 'is-processed' order_id=order.id %}">
+
+                {% csrf_token %}
+                {#    type="checkbox"#}
+                <input class="form-check-input" type="checkbox" name="is_processed" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">{% if order.is_processed %}{% endif %}</label>
+
+                <button type="submit" class="btn btn-outline-secondary" style="width: 60px; height: 20px; line-height: 0.20em;">
+                  <span style="font-size: 12px;">Execute</span>
+                </button>
+
+              </form>
+            </div>
+          </td>
+          <td class="d-none d-lg-table-cell">
+            <a class="btn btn-outline-secondary" style="width: 60px; height: 20px; line-height: 0.20em;"
+               href="{% url 'delete-order' order_id=order.id %}">
+              <span style="font-size: 12px;">Delete</span>
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+
+{% endblock %}
+
+
+
+
+{#    first_name = models.CharField(max_length=50)#}
+{#    last_name = models.CharField(max_length=50)#}
+{#    phone = models.CharField(max_length=20)#}
+{#    email = models.CharField(max_length=50)#}
+{#    city = models.CharField(max_length=50)#}
+{#    address = models.CharField(max_length=100)#}
+{#    postcode = models.CharField(max_length=10)#}
+{#    delivery = models.ForeignKey(Delivery, on_delete=models.CASCADE)#}
+{#    payment = models.ForeignKey(Payment, on_delete=models.CASCADE)#}
+
+

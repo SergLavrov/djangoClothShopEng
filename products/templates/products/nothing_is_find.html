@@ -1,0 +1,13 @@
+{% extends "products/layout.html" %}
+
+{% block content %}
+
+<p class="text-center" style="font-size: 18px; color: darkslateblue; padding-bottom: 40px; padding-top: 60px">
+  <b>Nothing was found for your request. To search again, return to the main page!</b>
+  </p>
+
+  <a href="{% url 'get-products'%}" class="btn btn-secondary" style="margin-bottom: 25px;
+    position: relative; left: 45%">Home</a>
+
+
+{% endblock %}

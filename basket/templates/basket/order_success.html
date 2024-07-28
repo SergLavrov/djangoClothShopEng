@@ -1,0 +1,14 @@
+{% extends "products/layout.html" %}
+
+{% block content %}
+
+  <p class="text-center" style="font-size: 18px; color: darkslateblue; padding-bottom: 40px; padding-top: 60px">
+    Your order has been successfully completed. Your order number is <strong>{{ order.id }}</strong>.
+    <br>You will receive a <i>CONFIRMATION</i> by phone or email about the order details!
+  </p>
+
+  <a href="{% url 'get-products'%}" class="btn btn-secondary" style="margin-bottom: 25px;
+    position: relative; left: 45%">Continue shopping</a>
+
+
+{% endblock %}

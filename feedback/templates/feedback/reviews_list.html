@@ -1,0 +1,20 @@
+{% extends "products/layout.html" %}
+
+{% block content %}
+    {% block basket %}
+    {% endblock %}
+
+    <h4 class="text-center" style="padding-top: 20px; font-family: cursive; font-size: 22px">Reviews</h4>
+
+{#    <a class="btn btn-outline-secondary" href="{% url 'create-ticket' %}">Add review</a>#}
+
+    {% for ticket in tickets %}
+
+      <li><b>{{ ticket.title }}</b></li>
+        status - {{ ticket.status.name }}<br>
+        <div><i>{{ ticket.description }}</i></div>
+        <hr>
+
+    {% endfor %}
+
+{% endblock %}

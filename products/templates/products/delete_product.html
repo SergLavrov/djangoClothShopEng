@@ -1,0 +1,42 @@
+{% extends "products/layout.html" %}
+
+{% block content %}
+
+
+    <h3 class="text-center" style="padding-top: 45px">Confirm deletion</h3>
+
+    <p class="text-center" style="font-size: 24px; padding-bottom: 15px; padding-top: 15px">
+      Are you sure you want to remove: {{ name_prod }} - article № {{ article }} ?
+    </p>
+
+    <form method="post" style="padding-bottom: 35px">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger" style="position: relative; left: 45%">Delete</button>
+      <a href="{% url 'get-product-by-id' product_id=product_id %}" class="btn btn-secondary"
+         style="position: relative; left: 45%">Cancel</a>
+    </form>
+
+{% endblock %}
+
+
+
+{#  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"#}
+{#         aria-hidden="true">#}
+{#        <div class="modal-dialog" role="document">#}
+{#            <div class="modal-content">#}
+{#                <div class="modal-header">#}
+{#                    <h4 class="text-center">Confirm deletion</h4>#}
+{#                </div>#}
+{#                <form method="post" action="{% url 'delete-product' product_id=product.id %}">#}
+{#                    {% csrf_token %}#}
+{#                    <div class="modal-body">#}
+{#                        <p>Are you sure you want to remove: {{ name_prod }} - article № {{ article }} ?</p>#}
+{#                    </div>#}
+{#                    <div class="modal-footer">#}
+{#                        <button type="submit" class="btn btn-danger">Удалить</button>#}
+{#                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>#}
+{#                    </div>#}
+{#                </form>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}

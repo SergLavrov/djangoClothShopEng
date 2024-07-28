@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from django.views.generic import RedirectView
-from .views import ProductListView
+from .views import ProductListView, ProductCategoryListView
 
 urlpatterns = [
     path('', RedirectView.as_view(url='get-products/', permanent=True)),
@@ -15,7 +15,8 @@ urlpatterns = [
     path('add-product/', views.add_product, name='add-product'),
     path('search-product/', views.search_product, name='search-product'),
     path('search-list/', views.search_products_list, name='search-products-list'),
-    path('get-products-category/<int:category_id>/', views.get_products_category, name='get-products-category'),
+    # path('get-products-category/<int:category_id>/', views.get_products_category, name='get-products-category'),
+    path('get-products-category/<int:category_id>/', ProductCategoryListView.as_view(), name='get-products-category'),
     # path('get-clothing/', views.get_clothing, name='get-clothing'),
     # path('get-shoes/', views.get_shoes, name='get-shoes'),
     # path('get-accessories/', views.get_accessories, name='get-accessories'),
