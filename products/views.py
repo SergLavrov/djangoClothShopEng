@@ -62,7 +62,7 @@ def get_products(request: HttpRequest) -> HttpResponse:
             'total_price': total_price
         }
 
-    else:           # при выходе из своего аккаунта !!! - мы НЕ должны передавать в шаблон количество товаров в корзине
+    else:       # при выходе из своего аккаунта - мы НЕ должны передавать в шаблон кол-во товаров в корзине и сумму !
         data = {
             'products': products,
             'categories': category_list,
@@ -71,6 +71,7 @@ def get_products(request: HttpRequest) -> HttpResponse:
             'size_scales': size_scale_list,
             'companies': company_list,
         }
+
     return render(request, 'products/all_products.html', data)
 
 
@@ -81,19 +82,38 @@ class ProductListView(ListView):
     context_object_name = 'products'
     paginate_by = 8
 
+# 2 Вариант с учетом количества товаров и суммы товаров в корзине!
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()
-        context['seasons'] = Season.objects.all()
-        context['compositions'] = ProductComposition.objects.all()
-        context['size_scales'] = SizeScale.objects.all()
-        context['companies'] = Company.objects.all()
+        # Для того чтобы На ГЛАВНОЙ СТРАНИЦЕ показывать КОЛИЧЕСТВО ТОВАРОВ и СУММУ ТОВАРОВ в корзине!
+        if self.request.user.is_authenticated:
+            basket_items = Basket.objects.filter(user=self.request.user)
+            total_quantity = basket_items.aggregate(Sum('quantity'))
+            total_price = sum(item.product.price * item.quantity for item in basket_items)
+
+            context['total_quantity'] = total_quantity.get('quantity__sum')
+            context['total_price'] = total_price
+
+            context['categories'] = Category.objects.all()
+            context['seasons'] = Season.objects.all()
+            context['compositions'] = ProductComposition.objects.all()
+            context['size_scales'] = SizeScale.objects.all()
+            context['companies'] = Company.objects.all()
         return context
+
+    # 1 Вариант
+    # def get_context_data(self, *, object_list=None, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['categories'] = Category.objects.all()
+    #     context['seasons'] = Season.objects.all()
+    #     context['compositions'] = ProductComposition.objects.all()
+    #     context['size_scales'] = SizeScale.objects.all()
+    #     context['companies'] = Company.objects.all()
+    #     return context
 
 # Для того чтобы не показывать удаленные продукты !
     def get_queryset(self):
         return Product.objects.filter(is_deleted=False)
-
 
 
 def get_products_list(request: HttpRequest) -> HttpResponse:

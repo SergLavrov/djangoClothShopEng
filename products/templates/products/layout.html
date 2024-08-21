@@ -177,24 +177,24 @@
 {#        </div>#}
 
 
-<!-- При ВХОДЕ от "Компании" попадаем на список товаров в ВИДЕ ТАБЛИЦЫ !!! -->
+
 
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 top-menu">
           <li class="nav-item ms-auto row">
             {% if not user.is_authenticated %}
-
               <a class="nav-link active col" aria-current="page" href="{% url 'login' %}">Enter</a>
               <a class="nav-link active col" aria-current="page" href="{% url 'register' %}">Register</a>
 
             {% else %}
               <a class="nav-link active col" aria-current="page" href="{% url 'logout' %}">Exit</a>
-
             {% endif %}
 
+<!-- При ВХОДЕ от "Компании" попадаем на список товаров в ВИДЕ ТАБЛИЦЫ !!! -->
             {% if perms.products.add1 %}
               <a class="nav-link active col" aria-current="page" href="{% url 'get-products-list' %}">Add</a>
             {% endif %}
 
+<!-- При ВХОДЕ от "Manager" видим ссылку "Orders", по которой появляется ТАБЛИЦА для обработки заказов Менеджером!!! -->
             {% if perms.basket.see3 %}
               <a class="nav-link active col" aria-current="page" href="{% url 'order-list' %}">Orders</a>
             {% endif %}
