@@ -360,6 +360,22 @@ def add_product(request):
                     or not company_id or not image):
                 raise ValidationError('All fields are required')
 
+            name_prod = str(name_prod)
+            if not name_prod.isalpha():  # возвращает True, если все символы в строке являются буквами!
+                raise ValidationError('Field Name product must contain only letters')
+
+            article = str(article)
+            if not isinstance(article, str):
+                raise ValidationError('Field must be a string')
+
+            description = str(description)
+            if not isinstance(description, str):
+                raise ValidationError('Field must be a string')
+
+            color = str(color)
+            if not color.isalpha():
+                raise ValidationError('Field color must contain only letters')
+
             price = float(price)
             if price <= 0:
                 raise ValidationError('Price must be greater than 0')
@@ -628,6 +644,8 @@ def search_product(request):
 # books = Book.objects.filter(Q(author='John Smith') & Q(year=2021) & Q(genre='Fiction'))
 # books = Book.objects.filter(author='John Smith').filter(year=2021)
 
+
+# БОКОВОЙ ФИЛЬТР
 
 def search_products_list(request):
         # Если метод запроса 'POST', то функция извлекает данные из заполненных полей шаблона!
