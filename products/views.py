@@ -38,49 +38,82 @@ from django.views.generic import ListView
 
 #
 #  3 Вариант - с учетом бокового меню "Filter" + Сумма количества товаров в иконке "Корзина"
-def get_products(request: HttpRequest) -> HttpResponse:
-    products = Product.objects.filter(is_deleted=False)
-    category_list = Category.objects.all()                    # Если запрос GET, то:
-    season_list = Season.objects.all()                        # функция извлекает ВСЕ данные товара с ForeignKey из БД
-    composition_list = ProductComposition.objects.all()
-    size_scale_list = SizeScale.objects.all()
-    company_list = Company.objects.all()
+# def get_products(request: HttpRequest) -> HttpResponse:
+#     products = Product.objects.filter(is_deleted=False)
+#     category_list = Category.objects.all()                    # Если запрос GET, то:
+#     season_list = Season.objects.all()                        # функция извлекает ВСЕ данные товара с ForeignKey из БД
+#     composition_list = ProductComposition.objects.all()
+#     size_scale_list = SizeScale.objects.all()
+#     company_list = Company.objects.all()
+#
+#     if request.user.is_authenticated:
+#         basket_items = Basket.objects.filter(user=request.user)
+#         total_quantity = basket_items.aggregate(Sum('quantity'))
+#         total_price = sum(item.product.price * item.quantity for item in basket_items)
+#
+#         data = {
+#             'products': products,
+#             'categories': category_list,      # таким образом передали в шаблон 5 словарей:
+#             'seasons': season_list,           # ДЛЯ УДОБСТВА заполнения этих полей в шаблоне - делаем их в виде
+#             'compositions': composition_list, # выпадающего списка - см. models.py !!!
+#             'size_scales': size_scale_list,
+#             'companies': company_list,
+#             'total_quantity': total_quantity.get('quantity__sum'),
+#             'total_price': total_price
+#         }
+#
+#     else:       # при выходе из своего аккаунта - мы НЕ должны передавать в шаблон кол-во товаров в корзине и сумму !
+#         data = {
+#             'products': products,
+#             'categories': category_list,
+#             'seasons': season_list,
+#             'compositions': composition_list,
+#             'size_scales': size_scale_list,
+#             'companies': company_list,
+#         }
+#
+#     return render(request, 'products/all_products.html', data)
 
-    if request.user.is_authenticated:
-        basket_items = Basket.objects.filter(user=request.user)
-        total_quantity = basket_items.aggregate(Sum('quantity'))
-        total_price = sum(item.product.price * item.quantity for item in basket_items)
 
-        data = {
-            'products': products,
-            'categories': category_list,      # таким образом передали в шаблон 5 словарей:
-            'seasons': season_list,           # ДЛЯ УДОБСТВА заполнения этих полей в шаблоне - делаем их в виде
-            'compositions': composition_list, # выпадающего списка - см. models.py !!!
-            'size_scales': size_scale_list,
-            'companies': company_list,
-            'total_quantity': total_quantity.get('quantity__sum'),
-            'total_price': total_price
-        }
-
-    else:       # при выходе из своего аккаунта - мы НЕ должны передавать в шаблон кол-во товаров в корзине и сумму !
-        data = {
-            'products': products,
-            'categories': category_list,
-            'seasons': season_list,
-            'compositions': composition_list,
-            'size_scales': size_scale_list,
-            'companies': company_list,
-        }
-
-    return render(request, 'products/all_products.html', data)
-
+# ПОЯСНЕНИЕ по использованию класса (ListView):
+#
+# - Класс ProductListView наследуется от ListView, который является ВСТРОЕННЫМ классом представлений в Django.
+# Он используется для отображения списка объектов.
+#
+# - В нашем классе ProductListView, который наследуется от ListView, родительским классом является ListView.
+# Когда вы вызываете super().get_context_data(**kwargs), вы вызываете метод get_context_data из класса ListView.
+#
+# - Класс ListView является частью Django и используется для отображения списков объектов.
+# Он предоставляет множество встроенных функций, таких как "ПАГИНАЦИЯ" и "СОРТИРОВКА",
+# которые можно использовать и переопределять в вашем классе представлений.
+#
+# - Функция get_context_data используется в Django, чтобы добавить дополнительные данные в контекст шаблона.
+# Она часто переопределяется в классах представлений (views) для добавления или изменения данных,
+# которые передаются в шаблон.
+#
+# Вот что делает эта функция:
+#
+# def get_context_data(self, *, object_list=None, **kwargs): - Это определение функции.
+# Она принимает аргументы object_list и **kwargs. object_list по умолчанию равен None,
+# а **kwargs позволяет передавать дополнительные именованные аргументы.
+#
+# context = super().get_context_data(**kwargs): - Здесь вызывается метод get_context_data родительского класса
+# с помощью super(), и результат сохраняется в переменную context.
+# Это позволяет сначала получить стандартный контекст, который формируется родительским классом.
+#
+# return context: Возвращает измененный контекст.
+#
+# - Таким образом, эта функция позволяет вам добавить или изменить данные в контексте,
+# который будет передан в шаблон. Например, вы можете добавить дополнительные переменные в контекст,
+# которые будут доступны в вашем шаблоне.
 
 # <!-- Pagination -->
 class ProductListView(ListView):
     model = Product
     template_name = 'products/all_products.html'
-    context_object_name = 'products'
-    paginate_by = 8
+    context_object_name = 'products' # а) по умолчанию object_list
+                                     # б) я так понял - это имя отдельного прилож/папки --> products
+    paginate_by = 12
 
 # 2 Вариант с учетом количества товаров и суммы товаров в корзине!
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -99,7 +132,18 @@ class ProductListView(ListView):
             context['compositions'] = ProductComposition.objects.all()
             context['size_scales'] = SizeScale.objects.all()
             context['companies'] = Company.objects.all()
+        # return context
+
+        else:
+            context['categories'] = Category.objects.all()
+            context['seasons'] = Season.objects.all()
+            context['compositions'] = ProductComposition.objects.all()
+            context['size_scales'] = SizeScale.objects.all()
+            context['companies'] = Company.objects.all()
         return context
+
+    def get_queryset(self):
+        return Product.objects.filter(is_deleted=False)  # Для того чтобы не показывать удаленные продукты !
 
     # 1 Вариант
     # def get_context_data(self, *, object_list=None, **kwargs):
@@ -110,10 +154,6 @@ class ProductListView(ListView):
     #     context['size_scales'] = SizeScale.objects.all()
     #     context['companies'] = Company.objects.all()
     #     return context
-
-# Для того чтобы не показывать удаленные продукты !
-    def get_queryset(self):
-        return Product.objects.filter(is_deleted=False)
 
 
 def get_products_list(request: HttpRequest) -> HttpResponse:
@@ -126,14 +166,14 @@ def get_products_list(request: HttpRequest) -> HttpResponse:
         return render(request, 'userAdmin/login.html')
 
 
-def get_products_category(request, category_id):
-    category_list = Category.objects.all()
-    products = Product.objects.filter(category__id=category_id).filter(is_deleted=False)
-    data = {
-        'products': products,
-        'categories': category_list
-    }
-    return render(request, 'products/all_products.html', data)
+# def get_products_category(request, category_id):
+#     category_list = Category.objects.all()
+#     products = Product.objects.filter(category__id=category_id).filter(is_deleted=False)
+#     data = {
+#         'products': products,
+#         'categories': category_list,
+#     }
+#     return render(request, 'products/all_products.html', data)
     # return render(request, 'products/all_products.html', {'products': products})
 
 
@@ -147,6 +187,10 @@ class ProductCategoryListView(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
+        context['seasons'] = Season.objects.all()
+        context['compositions'] = ProductComposition.objects.all()
+        context['size_scales'] = SizeScale.objects.all()
+        context['companies'] = Company.objects.all()
         return context
 
     def get_queryset(self):
@@ -648,6 +692,12 @@ def search_product(request):
 # БОКОВОЙ ФИЛЬТР
 
 def search_products_list(request):
+    category_list = Category.objects.all()
+    season_list = Season.objects.all()
+    composition_list = ProductComposition.objects.all()
+    size_scale_list = SizeScale.objects.all()
+    company_list = Company.objects.all()
+
         # Если метод запроса 'POST', то функция извлекает данные из заполненных полей шаблона!
     if request.method == 'POST':
         category_id = request.POST.get('category_id')
@@ -655,13 +705,6 @@ def search_products_list(request):
         product_composition_id = request.POST.get('product_composition_id')
         size_scale_id = request.POST.get('size_scale_id')
         company_id = request.POST.get('company_id')
-
-        # products_list = (Product.objects.
-        #                  filter(category=category).
-        #                  filter(season=season).
-        #                  filter(product_composition=product_composition).
-        #                  filter(size_scale=size_scale).
-        #                  filter(company=company))
 
         products_list = Product.objects.all().filter(is_deleted=False)
 
@@ -689,4 +732,74 @@ def search_products_list(request):
             # products_list = Product.objects.all()
             return render(request, 'products/nothing_is_find.html')
 
-        return render(request, 'products/all_products.html', {'products': products_list})
+        data = {
+            'products': products_list,
+            'categories': category_list,
+            'seasons': season_list,
+            'compositions': composition_list,
+            'size_scales': size_scale_list,
+            'companies': company_list,
+        }
+        return render(request, 'products/all_products.html', data)
+
+
+
+# class ProductsFiltersListView(ListView):
+#     model = Product
+#     template_name = 'products/all_products.html'
+#     context_object_name = 'products'
+#     paginate_by = 8
+#
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#
+#         context['products'] = Product.objects.all().filter(is_deleted=False)
+#
+#         # if request.method == 'POST':
+#         #     category_id = request.POST.get('category_id')
+#         #     season_id = request.POST.get('season_id')
+#         #     product_composition_id = request.POST.get('product_composition_id')
+#         #     size_scale_id = request.POST.get('size_scale_id')
+#         #     company_id = request.POST.get('company_id')
+#         #
+#         #     context['category_id'] = Category.objects.get(category__id=category_id)
+#         #     context['season_id'] = Category.objects.get(season__id=season_id)
+#         #     context['product_composition_id'] = Category.objects.get(product_composition__id=product_composition_id)
+#         #     context['size_scale_id'] = Category.objects.get(size_scale__id=size_scale_id)
+#         #     context['company_id'] = Category.objects.get(company__id=company_id)
+#
+#     # context['category_id'] = Category.objects.get(category__id=category_id)
+#     #     context['seasons'] = Season.objects.all()
+#     #     context['compositions'] = ProductComposition.objects.all()
+#     #     context['size_scales'] = SizeScale.objects.all()
+#     #     context['companies'] = Company.objects.all()
+#         return context
+#
+#     def get_queryset(self):
+#         return (Product.objects.
+#                 filter(category__id=self.kwargs['category_id']).
+#                 filter(season__id=self.kwargs['season_id']).
+#                 filter(product_composition__id=self.kwargs['product_composition_id']).
+#                 filter(size_scale__id=self.kwargs['size_scale_id']).
+#                 filter(company__id=self.kwargs['company_id']).
+#                 filter(is_deleted=False))
+
+
+
+# class ProductCategoryListView(ListView):
+#     model = Product
+#     template_name = 'products/all_products.html'
+#     context_object_name = 'products'
+#     paginate_by = 8
+#
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['categories'] = Category.objects.all()
+#         context['seasons'] = Season.objects.all()
+#         context['compositions'] = ProductComposition.objects.all()
+#         context['size_scales'] = SizeScale.objects.all()
+#         context['companies'] = Company.objects.all()
+#         return context
+#
+#     def get_queryset(self):
+#         return Product.objects.filter(category__id=self.kwargs['category_id']).filter(is_deleted=False)

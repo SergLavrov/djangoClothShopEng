@@ -353,8 +353,11 @@
    <!--Блок контента -->
      {% block content %}
      {% endblock %}
+
     <!--Пагинация -->
-     {% include 'products/pagination.html' %}
+    <!--1 Вариант - можно вставить в шаблон - layout.html -->
+    <!--2 Вариант - можно вставить в шаблон - all_products.html -->
+{#     {% include 'products/pagination.html' %}#}
 
    </div>
 
@@ -398,7 +401,7 @@
                 <li><a href="{% url 'ticket-reviews' %}">Reviews</a></li>
                 <li><a href="{% url 'create-ticket' %}">Ask a question</a></li>
                 <li><a href="{% url 'ticket-list' %}">My feedback</a></li>
-                 <li></li>
+                <li></li>
                 <li style="font-size: 17px; padding-left: 110px">enjoy shopping ...</li>
               </ul>
             </div>

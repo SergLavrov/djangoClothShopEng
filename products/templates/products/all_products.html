@@ -156,6 +156,11 @@
               </div>
             {% endfor %}
           </div>
+
+          <!--Пагинация -->
+          <!--1 Вариант - можно вставить в шаблон - layout.html -->
+          <!--2 Вариант - можно вставить в этот шаблон - all_products.html -->
+          {% include 'products/pagination.html' %}
         </div>
 
       </div>
