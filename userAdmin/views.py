@@ -49,24 +49,8 @@ def register_user(request: HttpRequest) -> HttpResponse:
 
 
 # Немного переделал код (if user is None:)!
-def login_user(request: HttpRequest) -> HttpResponse:
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        try:
-            if user is None:
-                raise ValidationError('Username or password is incorrect!')
-            else:
-                login(request, user)
-                # messages.success(request, 'Login completed successfully!')
-                return HttpResponseRedirect(reverse('get-products'))
-        except ValidationError as e:
-            error = str(e)
-            return render(request, 'userAdmin/login.html', {'error': error})
-    else:
-        return render(request, 'userAdmin/login.html')
-
+# НО ЭТОТ МЕТОД работает с ОШИБКОЙ: UnicodeDecodeError at /user-admin/login/
+# 'utf-8' codec can't decode byte 0xc2 in position 61: invalid continuation byte
 
 # def login_user(request: HttpRequest) -> HttpResponse:
 #     if request.method == 'POST':
@@ -74,16 +58,35 @@ def login_user(request: HttpRequest) -> HttpResponse:
 #         password = request.POST['password']
 #         user = authenticate(username=username, password=password)
 #         try:
-#             if user is not None:
-#                 login(request, user)
-#                 return HttpResponseRedirect(reverse('get-products'))
-#             else:
+#             if user is None:
 #                 raise ValidationError('Username or password is incorrect!')
+#             else:
+#                 login(request, user)
+#             #     # messages.success(request, 'Login completed successfully!')
+#                 return HttpResponseRedirect(reverse('get-products'))
 #         except ValidationError as e:
 #             error = str(e)
 #             return render(request, 'userAdmin/login.html', {'error': error})
 #     else:
 #         return render(request, 'userAdmin/login.html')
+
+
+def login_user(request: HttpRequest) -> HttpResponse:
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        try:
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect(reverse('get-products'))
+            else:
+                raise ValidationError('Username or password is incorrect!')
+        except ValidationError as e:
+            error = str(e)
+            return render(request, 'userAdmin/login.html', {'error': error})
+    else:
+        return render(request, 'userAdmin/login.html')
 
 
 def logout_user(request: HttpRequest):
