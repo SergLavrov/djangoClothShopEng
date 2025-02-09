@@ -13,6 +13,10 @@ class Basket(models.Model):
         # return f'Корзина для {self.user.username} | Продукт {self.product.name_prod}'
         return f'{self.quantity} x {self.product.name_prod}'
 
+    def items_price(self):
+        items_price = self.product.price * self.quantity
+        return items_price
+
 
 class Delivery(models.Model):
     delivery_type = models.CharField(max_length=50)

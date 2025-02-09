@@ -46,19 +46,57 @@
         }
     </style>
 
-  <h4>Your basket: <span style="font-size: 20px">{{ total_quantity }} items</span></h4>
+  <!--Можно выводить сообщения прямо в корзине - messages (https://docs.djangoproject.com/en/5.1/ref/contrib/messages/)
+    Alerts -> например Dismissing - (https://getbootstrap.com/docs/5.3/components/alerts/) -->
+
+   <!-- Но мы уже прописали вывод ВСЕХ возможных сообщений в шаблоне layout.html -->
+  {#  {% if messages %}#}
+{#    {% for message in messages %}#}
+{#      <div class="alert alert-success alert-dismissible fade show" role="alert">#}
+{#        <strong>{{ message }}</strong>#}
+{#        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">#}
+          {#            <span aria-hidden="true">&times;</span>#}
+{#        </button>#}
+{#      </div>#}
+{#    {% endfor %}#}
+{#  {% endif %}#}
+
+  <h5>In your basket - <span>{{ total_quantity }} items</span>
+
+    <span><i>(Total price: {{ total_price }} BYN)</i></span></h5>
 
   <div class="product-list">
 
     {% for item in basket_items %}
       <div class="product-item">
 
-        <img src="{{ item.product.image.url }}" alt="image" height="65" width="80">
+        <img src="{{ item.product.image.url }}" alt="image" height="65" width="85">
 
         <p>{{ item.product.name_prod }} ({{ item.quantity }} item)</p>
-        <p>Size: {{ item.product.size_scale.size_scale }}</p>
-        <p>Price: <strong>{{ item.product.price }} BYN</strong></p>
 
+        <div>
+          <form method="POST" action="{% url 'change-qty' item.id %}">
+            {% csrf_token %}
+            <label for="quantity" class="form-label fw-medium">quantity</label>
+            <br>
+            <div class="row-cols-auto">
+              <input type="number" id="quantity" name="qty" class="form-control-sm"
+                     style="width: 50px; background-color: lightgrey; border: outset" min="1"
+                     value="{{ item.quantity }}">
+{#              Справочно: value="{{ item.quantity }}"> или можно placeholder="{{ item.quantity }}" - #}
+{#              это кол-во единиц товара, которое будет отражаться в квадрате, где можно менять кол-во товара!#}
+
+              <input type="submit" value="change" class="btn btn-outline-secondary btn-sm"
+                     style="background-color: lightgrey; border: outset">
+  {#            <input type="submit" class="btn btn-outline-secondary btn-sm" value="change quantity">#}
+            </div>
+         </form>
+        </div>
+        <br>
+        <p>Size: {{ item.product.size_scale.size_scale }}</p>
+
+        <p>Price: <strong>{{ item.product.price }} BYN</strong></p>
+        
         <a style="color: dimgrey; font-size: 18px;" href="{% url 'delete-from-basket' item.id %}">
           <!-- Icon of Delete from Basket -->
           <i class="fa fa-trash" aria-hidden="true"></i>
@@ -71,7 +109,7 @@
 
   </div>
 
-  <p style="padding-top: 10px; padding-bottom: 10px; font-size: 17px"><strong>Total price: {{ total_price }} BYN</strong></p>
+{#  <p style="padding-top: 10px; padding-bottom: 10px; font-size: 17px"><strong>Total price: {{ total_price }} BYN</strong></p>#}
 
   <div style="padding-bottom: 15px">
     <a href="{% url 'get-products' %}" class="btn btn-outline-secondary">Continue shopping</a>

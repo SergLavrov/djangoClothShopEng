@@ -4,8 +4,7 @@
 
   <div class="row col-12 offset-lg-2 col-lg-8" style="padding-bottom: 20px">
 
-    <h3 class="pt-5" style="text-align: center; color: dimgrey; padding-bottom: 15px">Product - article
-      № {{ product.article }}</h3>
+    <h3 class="pt-5" style="text-align: center; color: dimgrey; padding-bottom: 15px">Product - article № {{ product.article }}</h3>
 
     <form method="POST" class="row" action="{% url 'update-product' product_id=product.id %}">
 

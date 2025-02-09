@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.db.models import Sum
+from django.contrib import messages
 
 """
 in_basket(запрос): В этом представлении отображается содержимое корзины покупок.
@@ -30,11 +31,12 @@ def in_basket(request):
     total_quantity = basket_items.aggregate(Sum('quantity'))
     # total_quantity = sum(item.quantity for item in basket_items)
     total_price = sum(item.product.price * item.quantity for item in basket_items)
+
     data = {
         'basket_items': basket_items,
         'total_quantity': total_quantity.get('quantity__sum'),
         # 'total_quantity': total_quantity,
-        'total_price': total_price
+        'total_price': total_price,
     }
     return render(request, 'basket/basket.html', data)
 
@@ -43,13 +45,18 @@ def in_basket(request):
 def add_to_basket(request, product_id: int):
     try:
         product = Product.objects.get(id=product_id)
-        product_count = Product.objects.get(id=product_id).product_count
+        prod_count = Product.objects.get(id=product_id).product_count
+        """ prod_count - получаем товар по id из БД и получаем его кол-во в магазине!!! 
+            в конце - .product_count - это "кол-во единиц продукта в магазине" из models.py Product 
+            Далее будем сравнивать кол-во единиц данного продукта в магазине с кол-вом единиц в КОРЗИНЕ ! """
+
         basket_item, created = Basket.objects.get_or_create(product=product, user=request.user)
+        """ получаем (если уже есть) или создаем объект корзины при помощи get_or_create """
 
-        basket_item.quantity += 1
-        basket_item.save()
+        basket_item.quantity += 1   # "quantity" берется из models.py Basket (default=0)
+        basket_item.save()          # сохраняем НОВЫЙ объект в БД, либо ОБНОВЛЯЕМ кол-во товара, если он есть в корзине
 
-        if basket_item.quantity > product_count:
+        if basket_item.quantity > prod_count:
             raise ValueError('Not enough products in stock')
 
     except ValueError as e:
@@ -59,9 +66,26 @@ def add_to_basket(request, product_id: int):
         basket_item, created = Basket.objects.get_or_create(product=product, user=request.user)
         basket_item.quantity -= 1
         basket_item.save()
+
         return render(request, 'basket/no_product_in_stock.html', {'error': error})
 
     return redirect('in-basket')
+
+
+def change_qty(request, item_id):
+    # current_page = request.META.get('HTTP_REFERER')
+
+    if request.method == 'POST':
+        item_qty = request.POST.get('qty')            # name="qty" из шаблона basket.html
+        basket_item = Basket.objects.get(id=item_id)
+
+        basket_item.quantity = item_qty
+        basket_item.save()
+        """ Выводим сообщение об успешном изменении количества товара в корзине. """
+        messages.add_message(request, messages.INFO, "Product quantity successfully changed.")
+
+        # return HttpResponseRedirect(current_page)
+        return redirect('in-basket')
 
 
 def no_product_in_stock(request):
@@ -72,6 +96,8 @@ def no_product_in_stock(request):
 def delete_from_basket(request, item_id):
     basket_item = Basket.objects.get(id=item_id)
     basket_item.delete()
+    """ Выводим сообщение об успешном удалении товара из корзины. """
+    messages.add_message(request, messages.INFO, "Product successfully deleted from basket.")
     return redirect('in-basket')
 
 
@@ -86,7 +112,7 @@ def delete_from_basket(request, item_id):
 с данными, введенными пользователями, а затем создается связанный экземпляр OrderItem 
 для каждого товара в корзине.
 
-3.Очистищаем все содержимое корзины и перенаправляем пользователей на страницу success
+3.Очищаем все содержимое корзины и перенаправляем пользователей на страницу success
 """
 
 
