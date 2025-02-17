@@ -4,7 +4,7 @@ from .models import Basket, Product, Payment, Delivery, Order, OrderItem
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.urls import reverse
-from django.db.models import Sum
+from django.db.models import Sum, F
 from django.contrib import messages
 
 """
@@ -23,7 +23,14 @@ delete_from_basket(request, item_id): Это представление обра
 и удаляет его из базы данных. После удаления он перенаправляет пользователя в представление корзины, 
 чтобы отразить обновленную корзину.
 """
-
+"""
+Полезный сайт: https://yourtodo.life/ru/posts/django-orm-slozhnyie-zaprosyi/
+https://metanit.com/python/django/5.17.php?ysclid=m77l2qqd5o805369037
+Агрегация - это процесс группировки нескольких строк данных и применения к ним определенной функции, 
+такой как SUM, AVG, COUNT и т.д. Запросы с использованием агрегации могут быть очень полезными 
+для анализа данных и извлечения информации из больших таблиц.
+Аннотация, использованием F-объектов и т.д. - см.ПРИМЕРЫ !!!
+"""
 
 @login_required(login_url='login')
 def in_basket(request):
@@ -31,6 +38,10 @@ def in_basket(request):
     total_quantity = basket_items.aggregate(Sum('quantity'))
     # total_quantity = sum(item.quantity for item in basket_items)
     total_price = sum(item.product.price * item.quantity for item in basket_items)
+
+    # total_price = 0     # Можно через цикл !!!
+    # for item in basket_items:
+    #     total_price += item.product.price * item.quantity
 
     data = {
         'basket_items': basket_items,
@@ -54,6 +65,7 @@ def add_to_basket(request, product_id: int):
         """ получаем (если уже есть) или создаем объект корзины при помощи get_or_create """
 
         basket_item.quantity += 1   # "quantity" берется из models.py Basket (default=0)
+        basket_item.same_items_price = basket_item.product.price * basket_item.quantity # models.py Basket(default=0)
         basket_item.save()          # сохраняем НОВЫЙ объект в БД, либо ОБНОВЛЯЕМ кол-во товара, если он есть в корзине
 
         if basket_item.quantity > prod_count:
@@ -74,18 +86,32 @@ def add_to_basket(request, product_id: int):
 
 def change_qty(request, item_id):
     # current_page = request.META.get('HTTP_REFERER')
+    basket_item = Basket.objects.get(id=item_id)
 
-    if request.method == 'POST':
-        item_qty = request.POST.get('qty')            # name="qty" из шаблона basket.html
-        basket_item = Basket.objects.get(id=item_id)
+    try:
+        if request.method == 'POST':
+            item_qty = int(request.POST.get('qty'))            # name="qty" из шаблона basket.html
+            basket_item.quantity = item_qty
+            basket_item.same_items_price = basket_item.product.price * basket_item.quantity
+            basket_item.save()
+            """ Выводим сообщение об успешном изменении количества товара в корзине. """
+            messages.add_message(request, messages.INFO, "Product quantity successfully changed.")
 
-        basket_item.quantity = item_qty
+        if basket_item.quantity > basket_item.product.product_count:
+            raise ValueError('Not enough products in stock.')
+
+    except ValueError as e:
+        error = str(e)
+        """ Если кол-во выбранного товара больше кол-ва единиц в магазине, то приравниваем его кол-во 
+        к кол-ву единиц в магазине. """
+        basket_item.quantity = basket_item.product.product_count
+        basket_item.same_items_price = basket_item.product.price * basket_item.quantity
         basket_item.save()
-        """ Выводим сообщение об успешном изменении количества товара в корзине. """
-        messages.add_message(request, messages.INFO, "Product quantity successfully changed.")
+
+        return render(request, 'basket/no_product_in_stock.html', {'error': error})
 
         # return HttpResponseRedirect(current_page)
-        return redirect('in-basket')
+    return redirect('in-basket')
 
 
 def no_product_in_stock(request):

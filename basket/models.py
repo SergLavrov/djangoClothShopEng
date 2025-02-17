@@ -8,14 +8,11 @@ class Basket(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0)
     created_timestamp = models.DateTimeField(auto_now_add=True)
+    same_items_price = models.FloatField(default=0)
+
 
     def __str__(self):
-        # return f'Корзина для {self.user.username} | Продукт {self.product.name_prod}'
-        return f'{self.quantity} x {self.product.name_prod}'
-
-    def items_price(self):
-        items_price = self.product.price * self.quantity
-        return items_price
+        return f'Корзина для {self.user.username} | Продукт {self.product.name_prod}'
 
 
 class Delivery(models.Model):

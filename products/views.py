@@ -36,8 +36,8 @@ from django.views.generic import ListView
 #     }
 #     return render(request, 'products/all_products.html', data)
 
-#
-#  3 Вариант - с учетом бокового меню "Filter" + Сумма количества товаров в иконке "Корзина"
+
+# 3 Вариант - с учетом бокового меню "Filter" + Сумма количества товаров в иконке "Корзина"
 # def get_products(request: HttpRequest) -> HttpResponse:
 #     products = Product.objects.filter(is_deleted=False)
 #     category_list = Category.objects.all()                    # Если запрос GET, то:
@@ -740,72 +740,72 @@ def search_product(request):
 
 # БОКОВОЙ ФИЛЬТР (без учета пагинации)
 
-# def search_products_list(request):
-#     category_list = Category.objects.all()
-#     season_list = Season.objects.all()
-#     composition_list = ProductComposition.objects.all()
-#     size_scale_list = SizeScale.objects.all()
-#     company_list = Company.objects.all()
-#
-#         # Если метод запроса 'POST', то функция извлекает данные из заполненных полей шаблона!
-#     if request.method == 'POST':
-#         category_id = request.POST.get('category_id')     # это name="category_id" из шаблона all_products.html
-#         season_id = request.POST.get('season_id')         # это name="season_id"
-#         product_composition_id = request.POST.get('product_composition_id')
-#         size_scale_id = request.POST.get('size_scale_id')
-#         company_id = request.POST.get('company_id')
-#
-#         products_list = Product.objects.all().filter(is_deleted=False)
-#
-#         if category_id:
-#             category = Category.objects.get(id=category_id)       # Находим КАТЕГОРИЮ по соотв-щему идентификатору
-#             products_list = products_list.filter(category=category)
-#
-#         if season_id:
-#             season = Season.objects.get(id=season_id)            # Находим КАТЕГОРИЮ по соотв-щему идентификатору
-#             products_list = products_list.filter(season=season)
-#
-#         if product_composition_id:
-#             product_composition = ProductComposition.objects.get(id=product_composition_id)
-#             products_list = products_list.filter(product_composition=product_composition)
-#
-#         if size_scale_id:
-#             size_scale = SizeScale.objects.get(id=size_scale_id)
-#             products_list = products_list.filter(size_scale=size_scale)
-#
-#         if company_id:
-#             company = Company.objects.get(id=company_id)
-#             products_list = products_list.filter(company=company)
-#
-#         if not products_list:
-#             # products_list = Product.objects.all()
-#             return render(request, 'products/nothing_is_find.html')
-#
-#         data = {
-#             'products': products_list,
-#             'categories': category_list,
-#             'seasons': season_list,
-#             'compositions': composition_list,
-#             'size_scales': size_scale_list,
-#             'companies': company_list,
-#         }
-#         return render(request, 'products/all_products.html', data)
+def search_products_list(request):
+    category_list = Category.objects.all()
+    season_list = Season.objects.all()
+    composition_list = ProductComposition.objects.all()
+    size_scale_list = SizeScale.objects.all()
+    company_list = Company.objects.all()
+
+        # Если метод запроса 'POST', то функция извлекает данные из заполненных полей шаблона!
+    if request.method == 'POST':
+        category_id = request.POST.get('category_id')     # это name="category_id" из шаблона all_products.html
+        season_id = request.POST.get('season_id')         # это name="season_id"
+        product_composition_id = request.POST.get('product_composition_id')
+        size_scale_id = request.POST.get('size_scale_id')
+        company_id = request.POST.get('company_id')
+
+        products_list = Product.objects.all().filter(is_deleted=False)
+
+        if category_id:
+            category = Category.objects.get(id=category_id)       # Находим КАТЕГОРИЮ по соотв-щему идентификатору
+            products_list = products_list.filter(category=category)
+
+        if season_id:
+            season = Season.objects.get(id=season_id)            # Находим КАТЕГОРИЮ по соотв-щему идентификатору
+            products_list = products_list.filter(season=season)
+
+        if product_composition_id:
+            product_composition = ProductComposition.objects.get(id=product_composition_id)
+            products_list = products_list.filter(product_composition=product_composition)
+
+        if size_scale_id:
+            size_scale = SizeScale.objects.get(id=size_scale_id)
+            products_list = products_list.filter(size_scale=size_scale)
+
+        if company_id:
+            company = Company.objects.get(id=company_id)
+            products_list = products_list.filter(company=company)
+
+        if not products_list:
+            # products_list = Product.objects.all()
+            return render(request, 'products/nothing_is_find.html')
+
+        data = {
+            'products': products_list,
+            'categories': category_list,
+            'seasons': season_list,
+            'compositions': composition_list,
+            'size_scales': size_scale_list,
+            'companies': company_list,
+        }
+        return render(request, 'products/all_products.html', data)
 
 
 # БОКОВОЙ ФИЛЬТР (с учетом пагинации)
-class ProductsFiltersListView(ListView):
-    model = Product
-    template_name = 'products/all_products.html'
-    context_object_name = 'products'
-    paginate_by = 8
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()
-        context['seasons'] = Season.objects.all()
-        context['compositions'] = ProductComposition.objects.all()
-        context['size_scales'] = SizeScale.objects.all()
-        context['companies'] = Company.objects.all()
+# class ProductsFiltersListView(ListView):
+#     model = Product
+#     template_name = 'products/all_products.html'
+#     context_object_name = 'products'
+#     paginate_by = 8
+#
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['categories'] = Category.objects.all()
+#         context['seasons'] = Season.objects.all()
+#         context['compositions'] = ProductComposition.objects.all()
+#         context['size_scales'] = SizeScale.objects.all()
+#         context['companies'] = Company.objects.all()
 
         # context['category_id'] = self.request.POST.get('category_id')
         # context['season_id'] = self.request.POST.get('season_id')
@@ -813,16 +813,16 @@ class ProductsFiltersListView(ListView):
         # context['size_scale_id'] = self.request.POST.get('size_scale_id')
         # context['company_id'] = self.request.POST.get('company_id')
 
-        return context
+        # return context
 
-    def post(self, request, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['category_id'] = self.request.POST.get('category_id')
-        context['season_id'] = self.request.POST.get('season_id')
-        context['product_composition_id'] = self.request.POST.get('product_composition_id')
-        context['size_scale_id'] = self.request.POST.get('size_scale_id')
-        context['company_id'] = self.request.POST.get('company_id')
+    # def post(self, request, *args, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #
+    #     context['category_id'] = self.request.POST.get('category_id')
+    #     context['season_id'] = self.request.POST.get('season_id')
+    #     context['product_composition_id'] = self.request.POST.get('product_composition_id')
+    #     context['size_scale_id'] = self.request.POST.get('size_scale_id')
+    #     context['company_id'] = self.request.POST.get('company_id')
 
         # if self.request.method == 'POST':
         #     self.kwargs['category_id'] = self.request.POST('category_id')
@@ -831,10 +831,10 @@ class ProductsFiltersListView(ListView):
         #     self.kwargs['size_scale_id'] = self.request.POST('size_scale_id')
         #     self.kwargs['company_id'] = self.request.POST('company_id')
 
-        return context
+        # return context
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
         # queryset = queryset.filter(is_deleted=False)
 
         # if self.request.method == 'POST':
@@ -852,24 +852,21 @@ class ProductsFiltersListView(ListView):
         # self.kwargs['company_id'] = self.request.GET.get('company_id')
 
         # if category_id == ['category_id']:
-        if category_id := self.kwargs['category_id']:
-            queryset = queryset.filter(category__id=category_id).filter(is_deleted=False)
-        if season_id := self.kwargs['season_id']:
-            queryset = queryset.filter(season__id=season_id).filter(is_deleted=False)
-        if product_composition_id := self.kwargs['product_composition_id']:
-            queryset = queryset.filter(product_composition__id=product_composition_id).filter(is_deleted=False)
-        if size_scale_id := self.kwargs['size_scale_id']:
-            queryset = queryset.filter(size_scale__id=size_scale_id).filter(is_deleted=False)
-        if company_id := self.kwargs['company_id']:
-            queryset = queryset.filter(company__id=company_id).filter(is_deleted=False)
-
-        return queryset
-
-
+        # if category_id := self.kwargs['category_id']:
+        #     queryset = queryset.filter(category__id=category_id).filter(is_deleted=False)
+        # if season_id := self.kwargs['season_id']:
+        #     queryset = queryset.filter(season__id=season_id).filter(is_deleted=False)
+        # if product_composition_id := self.kwargs['product_composition_id']:
+        #     queryset = queryset.filter(product_composition__id=product_composition_id).filter(is_deleted=False)
+        # if size_scale_id := self.kwargs['size_scale_id']:
+        #     queryset = queryset.filter(size_scale__id=size_scale_id).filter(is_deleted=False)
+        # if company_id := self.kwargs['company_id']:
+        #     queryset = queryset.filter(company__id=company_id).filter(is_deleted=False)
+        #
+        # return queryset
 
 
-
-
+# ПРОСТО ПРОБОВАЛ!!!
     # def get_context_data(self, *, object_list=None, **kwargs):
     #     context = super().get_context_data(**kwargs)
     #     context['products'] = Product.objects.all()

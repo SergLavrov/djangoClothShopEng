@@ -63,7 +63,7 @@
 
   <h5>In your basket - <span>{{ total_quantity }} items</span>
 
-    <span><i>(Total price: {{ total_price }} BYN)</i></span></h5>
+  <span><i>(Total price: {{ total_price }} BYN)</i></span></h5>
 
   <div class="product-list">
 
@@ -71,8 +71,19 @@
       <div class="product-item">
 
         <img src="{{ item.product.image.url }}" alt="image" height="65" width="85">
-
         <p>{{ item.product.name_prod }} ({{ item.quantity }} item)</p>
+
+{#        Пример части шаблоня для варианта: - цифра + #}
+{#        <div class="row mt-2">#}
+{#            <div class="col-md-3">#}
+{#                <label for="quantity">Quantity</label>#}
+{#                <div class="input-group text-center mb-3" style="width: 100px;">#}
+{#                    <button class="input-group-text decrement-btn">-</button>#}
+{#                    <input type="text" name="quantity" class="form-control text-center" value="1">#}
+{#                    <button class="input-group-text decrement-btn">+</button>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
 
         <div>
           <form method="POST" action="{% url 'change-qty' item.id %}">
@@ -94,9 +105,10 @@
         </div>
         <br>
         <p>Size: {{ item.product.size_scale.size_scale }}</p>
-
-        <p>Price: <strong>{{ item.product.price }} BYN</strong></p>
         
+        <p>Price: <br> <strong>{{ item.same_items_price }} BYN</strong></p>
+        <p>Price: <br> <strong>({{ item.product.price }} BYN * {{ item.quantity }})</strong></p>
+
         <a style="color: dimgrey; font-size: 18px;" href="{% url 'delete-from-basket' item.id %}">
           <!-- Icon of Delete from Basket -->
           <i class="fa fa-trash" aria-hidden="true"></i>
@@ -110,7 +122,6 @@
   </div>
 
 {#  <p style="padding-top: 10px; padding-bottom: 10px; font-size: 17px"><strong>Total price: {{ total_price }} BYN</strong></p>#}
-
   <div style="padding-bottom: 15px">
     <a href="{% url 'get-products' %}" class="btn btn-outline-secondary">Continue shopping</a>
     <a href="{% url 'create-order' %}" class="btn btn-outline-secondary">Checkout</a>
