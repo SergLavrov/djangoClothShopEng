@@ -4,7 +4,7 @@ from .models import Basket, Product, Payment, Delivery, Order, OrderItem
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.urls import reverse
-from django.db.models import Sum, F
+from django.db.models import Sum
 from django.contrib import messages
 
 """
@@ -32,6 +32,7 @@ https://metanit.com/python/django/5.17.php?ysclid=m77l2qqd5o805369037
 Аннотация, использованием F-объектов и т.д. - см.ПРИМЕРЫ !!!
 """
 
+
 @login_required(login_url='login')
 def in_basket(request):
     basket_items = Basket.objects.filter(user=request.user)
@@ -49,7 +50,8 @@ def in_basket(request):
         # 'total_quantity': total_quantity,
         'total_price': total_price,
     }
-    return render(request, 'basket/basket.html', data)
+    # return render(request, 'basket/basket.html', data)
+    return render(request, 'basket/basket_table2.html', data)
 
 
 @login_required(login_url='login')
@@ -84,25 +86,59 @@ def add_to_basket(request, product_id: int):
     return redirect('in-basket')
 
 
-def change_qty(request, item_id):
-    # current_page = request.META.get('HTTP_REFERER')
-    basket_item = Basket.objects.get(id=item_id)
+# 1 ВАРИАНТ для шаблона basket.html (через <input type="number" id="quantity" name="qty" ...>)
 
+# def change_qty(request, item_id):
+#     # current_page = request.META.get('HTTP_REFERER')
+#     basket_item = Basket.objects.get(id=item_id)
+#
+#     try:
+#         if request.method == 'POST':
+#             item_qty = int(request.POST.get('qty'))            # name="qty" из шаблона basket.html
+#             basket_item.quantity = item_qty
+#             basket_item.same_items_price = basket_item.product.price * basket_item.quantity
+#             basket_item.save()
+#             """ Выводим сообщение об успешном изменении количества товара в корзине. """
+#             messages.add_message(request, messages.INFO, "Product quantity successfully changed.")
+#
+#         if basket_item.quantity > basket_item.product.product_count:
+#             raise ValueError('Not enough products in stock.')
+#
+#     except ValueError as e:
+#         error = str(e)
+#         """ Если кол-во выбранного товара больше кол-ва единиц в магазине, то приравниваем его кол-во
+#         к кол-ву единиц в магазине. """
+#         basket_item.quantity = basket_item.product.product_count
+#         basket_item.same_items_price = basket_item.product.price * basket_item.quantity
+#         basket_item.save()
+#
+#         return render(request, 'basket/no_product_in_stock.html', {'error': error})
+#
+#         # return HttpResponseRedirect(current_page)
+#     return redirect('in-basket')
+
+
+# 2 ВАРИАНТ для шаблона basket_table.html !!!
+
+def change_qty_plus_minus(request, item_id):
+    basket_item = Basket.objects.get(id=item_id)
     try:
         if request.method == 'POST':
-            item_qty = int(request.POST.get('qty'))            # name="qty" из шаблона basket.html
+            item_qty = int(request.POST.get('qty')) # name="qty" из шаблона basket_table.html
             basket_item.quantity = item_qty
+
             basket_item.same_items_price = basket_item.product.price * basket_item.quantity
             basket_item.save()
+            print(basket_item.quantity)
             """ Выводим сообщение об успешном изменении количества товара в корзине. """
             messages.add_message(request, messages.INFO, "Product quantity successfully changed.")
 
-        if basket_item.quantity > basket_item.product.product_count:
-            raise ValueError('Not enough products in stock.')
+            if basket_item.quantity > basket_item.product.product_count:
+                raise ValueError('Not enough products in stock.')
 
     except ValueError as e:
         error = str(e)
-        """ Если кол-во выбранного товара больше кол-ва единиц в магазине, то приравниваем его кол-во 
+        """ Если кол-во выбранного товара больше кол-ва единиц в магазине, то приравниваем его кол-во
         к кол-ву единиц в магазине. """
         basket_item.quantity = basket_item.product.product_count
         basket_item.same_items_price = basket_item.product.price * basket_item.quantity
@@ -110,7 +146,6 @@ def change_qty(request, item_id):
 
         return render(request, 'basket/no_product_in_stock.html', {'error': error})
 
-        # return HttpResponseRedirect(current_page)
     return redirect('in-basket')
 
 

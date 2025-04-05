@@ -1,3 +1,6 @@
+{#Для подключения ВНЕШНГЕГО JavaScript (папка: static/js/script.js)#}
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,9 +54,57 @@
         height: 35px;
     }
   </style>
+
+  {#Для increment and decrement "PlUS / Number / MINUS" c подключением </style> черех "ВНЕШНИЙ ФАЙЛ" - CSS#}
+  <link rel="stylesheet" href="{% static 'css/stylesheet.css'%}" type="text/css">
+
 </head>
 
 <body style="background-color: lightgrey">
+
+{#Для increment and decrement "PlUS / Number / MINUS" c подключением JavaScript#}
+  <div class="buttons">
+    <span class="minus">&minus;</span>
+    <input type="text" class="value" value="01">
+    <span class="add">&plus;</span>
+  </div>
+
+{#  <link rel="stylesheet" href="{% static 'css/stylesheet.css'%}" type="text/css">#}
+  <script src="{% static 'js/script.js' %}"></script>
+
+{#  Для подключения JavaScript к HTML, используется "тег" - <script>...</script>#}
+{#  Но можно подключить JavaScript через "ВНЕШНИЙ ФАЙЛ" см. выше - (папка: static/js/script.js)#}
+
+{#  <script>#}
+{#    let minus = document.querySelector('.minus');#}
+{#    let add = document.querySelector('.add');#}
+{#    let input = document.querySelector('.value');#}
+{##}
+{#    let format = (num) => num > 9 ? num : '0' + num;#}
+{##}
+{#    minus.onclick = () =>{#}
+{#        let number = parseInt(input.value);#}
+{#        if(number == 0){#}
+{#            input.value = '00';#}
+{#        }else{#}
+{#            input.value = format(number - 1);#}
+{#        }#}
+{#    }#}
+{##}
+{#    add.onclick = () =>{#}
+{#        input.value = format(parseInt(input.value) + 1);#}
+{#    }#}
+{##}
+{#    input.addEventListener('keyup', () =>{#}
+{#        let number = parseInt(input.value);#}
+{#        if(isNaN(number)){#}
+{#            input.value = '00';#}
+{#        }else{#}
+{#            input.value = format(number);#}
+{#        }#}
+{#    })#}
+{#  </script>#}
+
 
    <nav class="navbar navbar-expand-lg navbar-light" style="box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 1.5)">
     <div class="container-fluid" style="font-size: larger">
@@ -409,8 +460,6 @@
       </div>
     </section>
   </footer>
-
-
 
             {#ДЛЯ FEEDBACK#}
    {#              <a class="nav-link active col" aria-current="page" href="{% url 'ticket-list' %}">Tickets</a>#}
