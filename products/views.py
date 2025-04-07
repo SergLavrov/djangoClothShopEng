@@ -166,6 +166,7 @@ class ProductListView(ListView):
             total_quantity = basket_items.aggregate(Sum('quantity'))
             total_price = sum(item.product.price * item.quantity for item in basket_items)
 
+            context['basket_items'] = basket_items
             context['total_quantity'] = total_quantity.get('quantity__sum')
             context['total_price'] = total_price
 

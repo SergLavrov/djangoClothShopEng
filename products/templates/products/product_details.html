@@ -2,15 +2,30 @@
 
 {% block headerbasket %}
   {% if user.is_authenticated and request.user.is_staff == False %}
+
     <div class="basket">
-      <a href="{% url 'in-basket' %}">
-        <i class="fa fa-shopping-cart position-relative" style="font-size: 30px; margin-left: 25px; color: black">
+{#      Задали условие:#}
+{#      if - если количество товаров > 0, то в иконке "КОРЗИНы" видим кол-во товаров в корзине !#}
+{#      else - если товаров в корзине НЕТ, то иконка корзины с ЦИФРОЙ - "0"#}
+      {% if basket_items|length > 0 %}
+        <a href="{% url 'in-basket' %}">
+          <i class="fa fa-shopping-cart position-relative" style="font-size: 30px; margin-left: 25px; color: black">
             <span class="position-absolute start-100 translate-middle badge rounded-pill bg-secondary"
                   style="font-size: 11px">
               {{ total_quantity }}
             </span>
-        </i>
-      </a>
+          </i>
+        </a>
+      {% else %}
+        <a href="{% url 'in-basket' %}">
+          <i class="fa fa-shopping-cart position-relative" style="font-size: 30px; margin-left: 25px; color: black">
+              <span class="position-absolute start-100 translate-middle badge rounded-pill bg-secondary"
+                    style="font-size: 11px">
+                0
+              </span>
+          </i>
+        </a>
+      {% endif %}
     </div>
 
     <div style="padding-left: 25px">

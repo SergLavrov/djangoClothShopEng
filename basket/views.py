@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.db.models import Sum
 from django.contrib import messages
+from django.db.models import Q
 
 """
 in_basket(запрос): В этом представлении отображается содержимое корзины покупок.
@@ -37,10 +38,16 @@ https://metanit.com/python/django/5.17.php?ysclid=m77l2qqd5o805369037
 def in_basket(request):
     basket_items = Basket.objects.filter(user=request.user)
     total_quantity = basket_items.aggregate(Sum('quantity'))
-    # total_quantity = sum(item.quantity for item in basket_items)
+    # total_quantity = total_quantity.get('quantity__sum')
     total_price = sum(item.product.price * item.quantity for item in basket_items)
 
-    # total_price = 0     # Можно через цикл !!!
+    # Можно через цикл !!!
+    # total_quantity = 0
+    # for item in basket_items:
+    #     total_quantity += item.quantity
+    # total_quantity = sum(item.quantity for item in basket_items)
+
+    # total_price = 0
     # for item in basket_items:
     #     total_price += item.product.price * item.quantity
 
