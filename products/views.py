@@ -141,7 +141,7 @@ class ProductListView(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         '''
         C помощью метода get_context_data() можно передавать любую информацию в шаблон !
-        Интегрированная среда предлагает полный формат записи этого метода со всеми параметрами:
+        Интегрированная среда предлагает "полный формат записи" этого метода со всеми параметрами:
 
         def get_context_data(self, *, object_list=None, **kwargs):
 
@@ -359,10 +359,14 @@ def get_scavers(request):
 #     return render(request, 'products/product_details.html', data)
 
 
+# Основной вариант !
 # 2 Вариант - с учетом Cуммы количества товаров в иконке "Корзина"
 def product_details(request, product_id):
-    size_scale_list = SizeScale.objects.all()
     product = Product.objects.get(id=product_id)
+    """ Выводим только те размеры, которые есть у данного АРТИКУЛА. """
+    sizes_product_list = SizeScale.objects.filter(product__article=product.article)
+    print(sizes_product_list)
+    # size_scale_list = SizeScale.objects.all()[5:]
 
     if request.user.is_authenticated:
         basket_items = Basket.objects.filter(user=request.user)
@@ -370,18 +374,37 @@ def product_details(request, product_id):
         total_price = sum(item.product.price * item.quantity for item in basket_items)
 
         data = {
-            'size_scales': size_scale_list,
+            'sizes_product_list': sizes_product_list,
             'product': product,
             'total_quantity': total_quantity.get('quantity__sum'),
-            'total_price': total_price
+            'total_price': total_price,
+            'basket_items': basket_items,
         }
 
     else:          # Если мы НЕ авторизованы !!! - мы НЕ должны передавать в шаблон количество товаров в корзине и цены!
         data = {
-            'size_scales': size_scale_list,
-            'product': product
+            'product': product,
+            'sizes_product_list': sizes_product_list,
         }
     return render(request, 'products/product_details.html', data)
+
+
+# 2.1 Вариант с выбором размера товара при входе в "DETAILS"
+def select_size(request, product_id):
+    current_page = request.META.get('HTTP_REFERER')
+    product = Product.objects.get(id=product_id)
+
+    if request.method == 'POST':
+        size_select_id = request.POST.get('size_product_id')  # Получим ID выбранного размера
+        # size = SizeScale.objects.get(id=size_select_id)
+        product.size_scale.size_scale = size_select_id
+        product.save()
+        print(size_select_id)
+
+        # if request.POST.get('size_prod') == '':
+        #     product.size = None
+
+    return HttpResponseRedirect(current_page)
 
 
 def get_product_by_id(request, product_id):
@@ -975,3 +998,39 @@ def search_products_list(request):
 #
 #     def get_queryset(self):
 #         return Product.objects.filter(category__id=self.kwargs['category_id']).filter(is_deleted=False)
+
+
+# Убрать ДУБЛИКАТЫ ИЗ СЛОВАРЯ в python:
+
+# Способ 1: Использование словаря с уникальными значениями
+# original_dict = {'a': 1, 'b': 2, 'c': 1, 'd': 3}
+# unique_dict = {}
+# for key, value in original_dict.items():
+#     if value not in unique_dict.values():
+#         unique_dict[key] = value
+#
+# print(unique_dict)
+# Вывод: {'a': 1, 'b': 2, 'd': 3}
+
+
+# Способ 2: Использование словаря с уникальными ключами
+#
+# original_dict = {'a': 1, 'b': 2, 'c': 1, 'd': 3}
+# unique_dict = dict.fromkeys(original_dict.keys())
+#
+# print(unique_dict)
+# Вывод: {'a': None, 'b': None, 'c': None, 'd': None}
+
+
+# Способ 3: Использование словаря с уникальными парами ключ-значение !
+# Если вам нужно сохранить уникальные пары ключ-значение, можно использовать set для проверки уникальности:
+# original_dict = {'a': 1, 'b': 2, 'c': 1, 'd': 3}
+# unique_dict = {}
+# seen_values = set()
+# for key, value in original_dict.items():
+#     if value not in seen_values:
+#         unique_dict[key] = value
+#         seen_values.add(value)
+#
+# print(unique_dict)
+# Вывод: {'a': 1, 'b': 2, 'd': 3}

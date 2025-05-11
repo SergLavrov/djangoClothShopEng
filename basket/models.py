@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from products.models import Product
+from products.models import Product, SizeScale
 
 
 class Basket(models.Model):
@@ -9,7 +9,10 @@ class Basket(models.Model):
     quantity = models.PositiveIntegerField(default=0)
     created_timestamp = models.DateTimeField(auto_now_add=True)
     same_items_price = models.FloatField(default=0)
+    # size_prod = models.IntegerField()
 
+    class Meta:
+        ordering = ['created_timestamp']
 
     def __str__(self):
         return f'Корзина для {self.user.username} | Продукт {self.product.name_prod}'

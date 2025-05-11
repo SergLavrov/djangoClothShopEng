@@ -23,6 +23,7 @@
         <th>Name</th>
         <th class="d-none d-md-table-cell">Article</th>
         <th class="d-none d-md-table-cell">Price</th>
+        <th class="d-none d-md-table-cell">Size</th>
         <th class="d-none d-lg-table-cell">Is deleted</th>
         <th class="d-none d-lg-table-cell">Image</th>
         <th class="d-none d-lg-table-cell" style="font-size: 17px">Update/Delete</th>
@@ -36,6 +37,7 @@
         <td>{{ product.name_prod }}</td>
         <td class="d-none d-md-table-cell">{{ product.article }}</td>
         <td class="d-none d-md-table-cell">{{ product.price }}</td>
+        <td class="d-none d-md-table-cell">{{ product.size_scale.size_scale }}</td>
         <td class="d-none d-md-table-cell">
           {% if product.is_deleted %}
             <b>Yes</b>

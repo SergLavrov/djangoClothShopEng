@@ -7,6 +7,9 @@ urlpatterns = [
     # path('in-basket2/<int:item_id>/', views.in_basket2, name='in-basket2'),
     path('add/<int:product_id>/', views.add_to_basket, name='add-to-basket'),
 
+    # path('add/<int:product_id>/<int:size_select_id>/', views.add_to_basket, name='add-to-basket'),
+    # path('select-size/<int:product_id>/', views.select_size, name='select-size'),
+
     # path('change/<int:item_id>/', views.change_qty, name='change-qty'),
     path('change-plus-minus/<int:item_id>/', views.change_qty_plus_minus, name='change-qty-plus-minus'),
 

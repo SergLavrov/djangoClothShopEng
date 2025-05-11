@@ -157,17 +157,29 @@
                     <h6 class="text-black-50">{{ product.price }} BYN</h6>
                   </div>
                   <p class="card-text">{{ product.description }}</p>
+
+                  {% for sc in size_scales %}
+                    <label class="btn btn-outline-secondary btn-sm">
+                      <input type="checkbox" class="btn-check" autocomplete="off" checked name="size_product_id"
+                             value="{{ sc.id }}">
+                      {{ sc.size_scale }}
+                    </label>
+                  {% endfor %}
+
                   <div class="d-flex justify-content-between">
-                    <a href="{% url 'product-details' product.id %}" class="btn btn-outline-secondary btn-sm">Details</a>
-                    {#  <a href="{% url 'add-to-basket' product.id %}" class="btn btn-outline-secondary">Add to basket</a>#}
-                    {#  {% if user.is_authenticated %}#}
+                    <a href="{% url 'product-details' product.id %}" class="btn btn-outline-secondary btn-sm">
+                      Details
+                    </a>
+
+{#                    {% if user.is_authenticated %}#}
+{#                  <a href="{% url 'add-to-basket' product.id %}" class="btn btn-outline-secondary">Add to basket</a>#}
                     <a href="{% url 'add-to-basket' product.id %}"><i class="fa fa-shopping-cart"></i></a>
-                    {#                        {% endif %}#}
+{#                    {% endif %}#}
                   </div>
                 </div>
               </div>
               <div>
-                <a href="{% url 'product-details' product.id %}">{{ product.name }}</a>
+{#                <a href="{% url 'product-details' product.id %}">{{ product.name }}</a>#}
               </div>
             {% endfor %}
           </div>

@@ -54,20 +54,69 @@
 {#          <h4 style="font-family: cursive; color: dimgrey">Size scale - {{ product.size_scale.size_scale }}</h4>#}
           <h4 style="font-family: cursive; color: dimgrey">Quantity in stock - {{ product.product_count }} (items)</h4>
 
-          <div class="col-12 col-lg-6 pb-3" style="font-family: cursive; font-size: 25px; color: dimgrey">
-            <label for="sizescale" class="form-label fw-medium nav-link active col">Size scale:</label>
-            <select class="form-select" id="sizescale" name="size_scale_id" style="width: 80px; background-color: lightgrey; border: outset">
+          <br>
 
-              {% for size_scale in size_scales %}
+{#          ПРОБОВАЛ Вариант через "checkbox" ввиде размеров в квадратах!#}
+          <div>
+            <form method="post" action="{% url 'select-size' product.id %}">
+              {% csrf_token %}
+            {#    Для создания связи <label> с <input> существует два способа: см. ВНИЗУ !!!#}
+                <div>
+{#                Вариант через type="checkbox" в виде КВАДРАТНЫХ КНОПОК#}
+{#                {% for sc in sizes_product_list %}#}
+{#                  <label class="btn btn-outline-secondary btn-sm">#}
+{#                    <input type="checkbox" class="btn-check" autocomplete="off" checked name="size_scales"#}
+{#                           value="{{ sc.id }}">#}
+{#                      {{ sc.size_scale }}#}
+{#                  </label>#}
+{#                {% endfor %}#}
 
-                {% if size_scale.id == product.size_scale.id %}
-                  <option value="{{ size_scale.id }}" selected>{{ size_scale.size_scale }}</option>
-                {% else %}
-                  <option value="{{ size_scale.id }}">{{ size_scale.size_scale }}</option>
-                {% endif %}
-              {% endfor %}
-            </select>
+  {#              Вариант через type="checkbox" в виде КВАДРАТНЫХ КНОПОК #}
+{#                  {% for sc in sizes_product_list %}#}
+{#                    <input type="checkbox" class="btn-check" id="btn-check-2-outlined" autocomplete="off" checked#}
+{#                           name="size_scales" value="{{ sc.id }}">#}
+{#                    <label class="btn btn-outline-secondary btn-sm" for="btn-check-2-outlined">#}
+{#                      {{ sc.size_scale }}#}
+{#                    </label>#}
+{#                  {% endfor %}#}
+
+{#                  Вариант через RADIO кнопку - type="radio"#}
+{#                  {% for sc in sizes_product_list %}#}
+{#                    <input type="radio" class="form-check-input" name="size_scales" id="option5" value="{{ sc.id }}"#}
+{#                           autocomplete="off">#}
+{#                    <label class="btn" for="option5">{{ sc.size_scale }}</label>#}
+{#                  {% endfor %}#}
+
+{#                    Вариант через RADIO кнопку - type="radio"#}
+                  {% for sc in sizes_product_list %}  {# sizes_product_list - из data из views: def product_details#}
+                    <label>
+                      <input type="radio" class="form-check-input" name="size_product_id" value="{{ sc.id }}">
+                      <span>{{ sc.size_scale }}</span>
+                    </label>
+                    <br/>
+                  {% endfor %}
+
+                  <div style="padding-top: 12px">
+                    <input type="submit" value="Select size">
+                  </div>
+                </div>
+            </form>
           </div>
+{#          ПРОБОВАЛ Вариант через "Выпадающий список"#}
+{#          <div class="col-12 col-lg-6 pb-3" style="font-family: cursive; font-size: 25px; color: dimgrey">#}
+{#            <label for="sizescale" class="form-label fw-medium nav-link active col">Size scale:</label>#}
+{#            <select class="form-select" id="sizescale" name="size_scale_id" style="width: 80px; background-color: lightgrey; border: outset">#}
+{##}
+{#              {% for size_scale in size_scales %}#}
+{##}
+{#                {% if size_scale.id == product.size_scale.id %}#}
+{#                  <option value="{{ size_scale.id }}" selected>{{ size_scale.size_scale }}</option>#}
+{#                {% else %}#}
+{#                  <option value="{{ size_scale.id }}">{{ size_scale.size_scale }}</option>#}
+{#                {% endif %}#}
+{#              {% endfor %}#}
+{#            </select>#}
+{#          </div>#}
 
           <br>
 
@@ -83,6 +132,26 @@
 {% endblock %}
 
 
-{% if perms.products.add1 %}
-    <a class="btn btn-outline-secondary" href="{% url 'add-product' %}">Add product</a>
-    {% endif %}
+{#  НЕ забыть подключить вверху страницы {% load static %} !!!#}
+{#  Для ПОДКЛЮЧЕНИЯ JavaScript к HTML, используется "тег" - <script>...</script>#}
+{#  Но можно подключить JS через "ВНЕШНИЙ ФАЙЛ" - (папка: static/js/script2.js)#}
+{#        <script src="{% static 'js/script2.js' %}"></script>#}
+
+
+{#    Справочно !!!#}
+{#    Для создания связи <label> с <input> существует два способа:#}
+{##}
+{#1. Связь по id. Для этого необходимо задать уникальный id для <input> и связать <label> с чекбоксом #}
+{#  с помощью атрибута for #}
+{#   <form>#}
+{#     <input id="html" type="checkbox">#}
+{#     <label for="html">Хочу изучать HTML</label>#}
+{#   </form>#}
+{#      #}
+{#2. Вложить <input> внутрь тега <label>. При этом указание уникального id не требуется!#}
+{#    <form>#}
+{#      <label>#}
+{#        <input type="checkbox">#}
+{#        Хочу изучать HTML#}
+{#      </label>#}
+{#    </form>#}

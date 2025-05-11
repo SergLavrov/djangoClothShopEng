@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
-from .models import Basket, Product, Payment, Delivery, Order, OrderItem
+from .models import Basket, Product, Payment, Delivery, Order, OrderItem, SizeScale
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.db.models import Sum
 from django.contrib import messages
-from django.db.models import Q
 
 """
 in_basket(запрос): В этом представлении отображается содержимое корзины покупок.
@@ -33,7 +32,7 @@ https://metanit.com/python/django/5.17.php?ysclid=m77l2qqd5o805369037
 Аннотация, использованием F-объектов и т.д. - см.ПРИМЕРЫ !!!
 """
 
-
+# ОСНОВНОЙ ВАРИАНТ !!!
 @login_required(login_url='login')
 def in_basket(request):
     basket_items = Basket.objects.filter(user=request.user)
@@ -45,6 +44,7 @@ def in_basket(request):
     # total_quantity = 0
     # for item in basket_items:
     #     total_quantity += item.quantity
+    # Можно через sum !!!
     # total_quantity = sum(item.quantity for item in basket_items)
 
     # total_price = 0
@@ -61,13 +61,74 @@ def in_basket(request):
     return render(request, 'basket/basket_table2.html', data)
 
 
+# ПОБОВАЛ !!!
+
+# @login_required(login_url='login')
+# def add_to_basket(request, product_id):
+#     try:
+#         product = Product.objects.get(id=product_id)
+#
+#         if request.method == 'POST':
+#             size_select_id = request.POST.get('size_product_id')  # Получим ID выбранного размера
+#             # size = SizeScale.objects.get(id=size_select_id)
+#             product.size_scale.size_scale = size_select_id
+#
+#             prod_count = Product.objects.get(id=product_id).product_count
+#             """ prod_count - получаем товар по id из БД и получаем его кол-во в магазине!!!
+#                 в конце - .product_count - это "кол-во единиц продукта в магазине" из models.py Product
+#                 Далее будем сравнивать кол-во единиц данного продукта в магазине с кол-вом единиц в КОРЗИНЕ ! """
+#
+#             basket_item, created = Basket.objects.get_or_create(product=product, user=request.user, size_scale=size_select_id)
+#             """ получаем (если уже есть) или создаем объект корзины при помощи get_or_create """
+#
+#             basket_item.quantity += 1   # "quantity" берется из models.py Basket (default=0)
+#             basket_item.same_items_price = basket_item.product.price * basket_item.quantity # models.py Basket(default=0)
+#             basket_item.save()          # сохраняем НОВЫЙ объект в БД, либо ОБНОВЛЯЕМ кол-во товара, если он есть в корзине
+#
+#             if basket_item.quantity > prod_count:
+#                 raise ValueError('Not enough products in stock')
+#
+#     except ValueError as e:
+#         error = str(e)
+#
+#         product = Product.objects.get(id=product_id)
+#         basket_item, created = Basket.objects.get_or_create(product=product, user=request.user, size_scale=size_select_id)
+#         basket_item.quantity -= 1
+#         basket_item.save()
+#
+#         return render(request, 'basket/no_product_in_stock.html', {'error': error})
+#
+#     return redirect('in-basket')
+
+
+# Вариант с выбором размера товара при входе в "DETAILS"
+# def select_size(request, product_id):
+#     current_page = request.META.get('HTTP_REFERER')
+#     product = Product.objects.get(id=product_id)
+#
+#     if request.method == 'POST':
+#         size_id = request.POST.get('size_product')  # Получим ID выбранного размера
+#         size = SizeScale.objects.get(id=size_id)
+#         product.size_scale = size
+#         # size = Product.objects.get(id=product_id).size_scales.get(id=size_id)
+#         # size = SizeScale.objects.get(id=size_id)
+#         print(size)
+#
+#         # if request.POST.get('size_prod') == '':
+#         #     product.size = None
+#
+#     return HttpResponseRedirect(current_page)
+
+
+
+# Основной вариант БЕЗ учета ВЫБОРА РАЗМЕРА товара:
 @login_required(login_url='login')
 def add_to_basket(request, product_id: int):
     try:
         product = Product.objects.get(id=product_id)
         prod_count = Product.objects.get(id=product_id).product_count
-        """ prod_count - получаем товар по id из БД и получаем его кол-во в магазине!!! 
-            в конце - .product_count - это "кол-во единиц продукта в магазине" из models.py Product 
+        """ prod_count - получаем товар по id из БД и получаем его кол-во в магазине!!!
+            в конце - .product_count - это "кол-во единиц продукта в магазине" из models.py Product
             Далее будем сравнивать кол-во единиц данного продукта в магазине с кол-вом единиц в КОРЗИНЕ ! """
 
         basket_item, created = Basket.objects.get_or_create(product=product, user=request.user)
@@ -136,7 +197,7 @@ def change_qty_plus_minus(request, item_id):
 
             basket_item.same_items_price = basket_item.product.price * basket_item.quantity
             basket_item.save()
-            print(basket_item.quantity)
+            # print(basket_item.quantity)
             """ Выводим сообщение об успешном изменении количества товара в корзине. """
             messages.add_message(request, messages.INFO, "Product quantity successfully changed.")
 
